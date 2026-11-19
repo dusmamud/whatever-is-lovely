@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -30,11 +31,17 @@ const crumbLabels: Record<string, string> = {
   'our-team': 'Our Team', services: 'Services', blog: 'The Blog', faq: 'FAQ',
   privacy: 'Privacy Policy', terms: 'Terms of Service', 'work-with-us': 'Work With Us',
   search: 'Search',
+  weddings: 'Real Weddings', book: 'Book Your Date', pricing: 'Pricing',
+  reviews: 'Reviews', vendors: 'Vendors', gallery: 'Gallery', about: 'About',
+  contact: 'Contact', process: 'Our Process',
   'full-service-planning': 'Full Service Planning', 'partial-planning': 'Partial Planning',
   'day-of-coordination': 'Day-Of Coordination',
   'kansas-city-wedding-venues': 'Kansas City Wedding Venues',
   'day-of-coordination-worth-it': 'Is Day-Of Coordination Worth It?',
   'wedding-budget-kansas-city': 'Kansas City Wedding Budget 2026',
+  'emma-james-garden': 'Emma & James', 'sophia-liam-river': 'Sophia & Liam',
+  'ava-noah-barn': 'Ava & Noah', 'mia-ethan-downtown': 'Mia & Ethan',
+  'isabella-lucas-estate': 'Isabella & Lucas', 'harper-owen-vineyard': 'Harper & Owen',
 };
 const crumbLd = crumbs.length
   ? {
@@ -94,6 +101,7 @@ const websiteLd = {
     <link rel="preload" href="/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <ClientRouter />
     <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />
     {crumbLd && <script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />}
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}

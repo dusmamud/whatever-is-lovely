@@ -1,0 +1,81 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Picture from '../../components/Picture.astro';
+import StickyBar from '../../components/StickyBar.astro';
+import { weddings } from '../../data/site';
+const pic = (img: string) => img.replace('/images/', '').replace(/-\d+\.jpg$/, '');
+const styles = ['All', 'Garden', 'Classic', 'Rustic', 'Modern'];
+---
+<Layout
+  title="Real Weddings — Whatever is Lovely | Kansas City Wedding Planning"
+  description="Real Kansas City weddings we've planned — garden, classic, rustic and modern celebrations, with the venues, vendors and stories behind them."
+  ogImage="https://whatever-is-lovely.pages.dev/images/venue-garden-1200.jpg"
+>
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">Real Weddings</p>
+    <h1 data-split class="mt-2 text-center font-display text-5xl font-semibold uppercase text-terra sm:text-6xl">Love stories, beautifully told</h1>
+    <p class="reveal mx-auto mt-4 max-w-2xl text-center leading-relaxed text-ink-soft">Every wedding below is one we planned in Kansas City — garden ceremonies, barn dance floors, downtown lofts and vineyard dinners. Find the style that feels like you.</p>
+
+    <div class="reveal mt-10 flex flex-wrap justify-center gap-2" role="group" aria-label="Filter weddings by style">
+      {styles.map((s) => (
+        <button
+          type="button"
+          data-filter={s.toLowerCase()}
+          aria-pressed={s === 'All' ? 'true' : 'false'}
+          class:list={['min-h-[44px] rounded-full border px-5 py-2.5 text-sm font-bold uppercase tracking-wider transition', s === 'All' ? 'border-terra bg-terra text-white' : 'border-line bg-white text-terra hover:border-terra']}
+        >{s}</button>
+      ))}
+    </div>
+    <p id="wedding-count" class="mt-4 text-center text-sm font-semibold text-ink-soft" aria-live="polite">{weddings.length} weddings</p>
+
+    <div id="wedding-grid" class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {weddings.map((w) => (
+        <article class="wedding-card reveal overflow-hidden rounded-2xl bg-white shadow-sm" data-category={w.category.toLowerCase()}>
+          <a href={`/weddings/${w.slug}/`} aria-label={`${w.title} — ${w.venue}`}>
+            <Picture name={pic(w.img)} alt={`${w.title} — ${w.venue}`} sizes="(max-width: 768px) 100vw, 380px" imgClass="aspect-[4/3] w-full object-cover" />
+          </a>
+          <div class="p-5">
+            <p class="text-xs font-bold uppercase tracking-wider text-gold-text">{w.category} · {w.season}</p>
+            <h2 class="mt-1 font-display text-2xl font-semibold text-terra"><a href={`/weddings/${w.slug}/`} class="transition hover:text-gold-deep">{w.title}</a></h2>
+            <p class="text-sm text-ink-soft">{w.venue} · {w.date}</p>
+            <p class="mt-2 text-sm leading-relaxed text-ink-soft">{w.summary}</p>
+            <p class="mt-3 text-xs font-bold uppercase tracking-wider text-terra">Planned with {w.serviceUsed}</p>
+            <a href={`/weddings/${w.slug}/`} class="mt-3 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-terra transition hover:text-gold-deep">See the wedding <span class="card-arrow" aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      ))}
+    </div>
+    <p id="wedding-empty" class="mt-8 hidden text-center text-ink-soft">No weddings in this style yet — try another filter.</p>
+    <div class="reveal mt-12 text-center">
+      <p class="font-script text-5xl text-terra">your story could be next</p>
+      <a href="/book/" class="mt-5 inline-block rounded-sm bg-gold px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white">Check Your Date</a>
+    </div>
+  </section>
+  <StickyBar />
+</Layout>
+<script>
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+  const cards = [...document.querySelectorAll<HTMLElement>('#wedding-grid [data-category]')];
+  const count = document.getElementById('wedding-count');
+  const empty = document.getElementById('wedding-empty');
+  const apply = (filter: string) => {
+    let shown = 0;
+    cards.forEach((c) => {
+      const show = filter === 'all' || c.dataset.category === filter;
+      c.classList.toggle('hidden', !show);
+      if (show) shown += 1;
+    });
+    if (count) count.textContent = shown === 1 ? '1 wedding' : `${shown} weddings`;
+    empty?.classList.toggle('hidden', shown > 0);
+    buttons.forEach((b) => {
+      const active = b.dataset.filter === filter;
+      b.setAttribute('aria-pressed', String(active));
+      b.classList.toggle('border-terra', active);
+      b.classList.toggle('bg-terra', active);
+      b.classList.toggle('text-white', active);
+      b.classList.toggle('bg-white', !active);
+      b.classList.toggle('text-terra', !active);
+    });
+  };
+  buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter ?? 'all')));
+</script>

@@ -1,0 +1,79 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Picture from '../../components/Picture.astro';
+import StickyBar from '../../components/StickyBar.astro';
+import { team, stats, site } from '../../data/site';
+const values = [
+  { title: 'Your wedding, not a template', body: 'We never repeat a design. Every wedding starts with your story — the way you met, the places you love, the people who matter — and the plan grows from there.' },
+  { title: 'Calm is a service', body: 'Weddings have surprises: rain, late florists, a missing boutonniere. Our job is to absorb the stress so you never feel it. If we look calm, it is because the plan already covered it.' },
+  { title: 'Honest advice, always', body: 'If a vendor is wrong for you, we say so. If your budget needs a trade-off, we show you the options plainly. We would rather lose a booking than plan a wedding we do not believe in.' },
+  { title: 'The details guests photograph', body: 'The place cards, the candlelight, the song that opens the first dance — small things are what guests remember. We sweat them so you do not have to.' },
+];
+---
+<Layout
+  title="About — Whatever is Lovely | Kansas City Wedding Planning Studio"
+  description="Whatever is Lovely is a Kansas City wedding planning studio, founded in 2016 by Grace Whitfield. Our story, our philosophy, and why Kansas City is home."
+  ogImage="https://whatever-is-lovely.pages.dev/images/planner-grace-1200.jpg"
+>
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">About Us</p>
+    <h1 data-split class="mt-2 text-center font-display text-5xl font-semibold uppercase text-terra sm:text-6xl">The story behind the lovely</h1>
+    <p class="reveal mx-auto mt-4 max-w-2xl text-center leading-relaxed text-ink-soft">Whatever is Lovely began with one wedding, one very nervous bride — and a planner who could not stop smiling.</p>
+
+    <div class="mt-12 grid items-center gap-10 md:grid-cols-2">
+      <div class="reveal">
+        <Picture name="planner-grace" alt="Grace Whitfield, founder and lead planner, smiling in a garden" sizes="(max-width: 768px) 100vw, 560px" imgClass="aspect-[3/4] w-full rounded-2xl object-cover shadow-md" />
+        <p class="mt-3 text-center text-sm font-semibold text-ink-soft">Grace Whitfield — Founder &amp; Lead Planner</p>
+      </div>
+      <div class="reveal">
+        <h2 class="font-display text-3xl font-semibold text-terra">It started with a favor</h2>
+        <p class="mt-3 leading-relaxed text-ink-soft">In 2016, Grace's best friend asked her to "just help a little" with her wedding. Three months later Grace had designed the florals, negotiated the venue, built a 14-page timeline — and discovered the thing she was meant to do. The wedding was beautiful. The friend cried happy tears. Grace never went back to her old job.</p>
+        <p class="mt-3 leading-relaxed text-ink-soft">Ten years and 320+ weddings later, the studio is still small on purpose: Grace, Hannah and Ella, a senior team with no juniors learning on your wedding. We take a limited number of weddings each year so every couple gets the same care as that very first one.</p>
+        <p class="mt-3 leading-relaxed text-ink-soft">The name comes from a line Grace's grandmother used to say — <em>"whatever is lovely, think on these things"</em> — and it is still the test for every decision we make: is it lovely? Does it feel like you? If not, we find something that does.</p>
+      </div>
+    </div>
+
+    <h2 class="reveal mt-16 text-center font-display text-4xl font-semibold uppercase text-terra sm:text-5xl">What we believe</h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2">
+      {values.map((v) => (
+        <article class="reveal rounded-2xl border border-line bg-white p-7 shadow-sm">
+          <p class="font-display text-lg font-bold text-gold-text">✦</p>
+          <h3 class="mt-2 font-display text-2xl font-semibold text-terra">{v.title}</h3>
+          <p class="mt-2 leading-relaxed text-ink-soft">{v.body}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="mt-16 grid items-center gap-10 md:grid-cols-2">
+      <div class="reveal order-2 md:order-1">
+        <h2 class="font-display text-3xl font-semibold text-terra">Why Kansas City?</h2>
+        <p class="mt-3 leading-relaxed text-ink-soft">Kansas City is home — Grace grew up in Waldo, Hannah in Overland Park, Ella in the Crossroads — and it is a wonderful place to get married. Within an hour of downtown you can marry in a garden, a historic barn, a modern loft, a vineyard or a grand estate. The light in spring and fall is golden, the barbecue is non-negotiable, and the vendors here are the kind of people who stay late and mean it.</p>
+        <p class="mt-3 leading-relaxed text-ink-soft">We know this city's venues, its seasons and its people — which garden floods after rain, which loft catches the sunset, which caterer handles 200 guests without breaking a sweat. That local knowledge is the quiet advantage of hiring a Kansas City planner: fewer surprises, better vendors, and a day that feels rooted in the place you love.</p>
+        <p class="mt-3 leading-relaxed text-ink-soft">Most of our weddings are in the KC metro, and we travel for destination weddings across Missouri, Kansas and beyond.</p>
+      </div>
+      <div class="reveal order-1 md:order-2">
+        <Picture name="couple-sunset" alt="Newlyweds at sunset in a Kansas City garden" sizes="(max-width: 768px) 100vw, 560px" imgClass="aspect-[4/3] w-full rounded-2xl object-cover shadow-md" />
+      </div>
+    </div>
+
+    <div class="reveal mt-14 grid grid-cols-2 gap-6 rounded-2xl bg-terra p-8 text-center text-white sm:grid-cols-4">
+      {stats.map((s) => (
+        <div>
+          <p class="font-display text-4xl font-bold"><span data-count={s.value}>0</span>{s.suffix}</p>
+          <p class="mt-1 text-xs font-bold uppercase tracking-wider text-white/85">{s.label}</p>
+          <p class="text-xs text-white/70">{s.sub}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="reveal mt-12 text-center">
+      <p class="font-script text-5xl text-terra">come say hello</p>
+      <p class="mx-auto mt-3 max-w-xl leading-relaxed text-ink-soft">Meet {team.map((m) => m.name).join(', ')} — or just Grace, Hannah and Ella over coffee. The first consultation is free, and {site.bookingYear} dates are booking now.</p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a href="/book/" class="min-h-[48px] rounded-sm bg-gold px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white">Book a Free Consultation</a>
+        <a href="/our-team/" class="min-h-[48px] rounded-sm border border-terra px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-terra transition hover:bg-terra hover:text-white">Meet the Team</a>
+      </div>
+    </div>
+  </section>
+  <StickyBar />
+</Layout>

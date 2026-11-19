@@ -1,8 +1,9 @@
 // MOCK DATA — demo placeholders for the client presentation.
 // NOTHING here is real yet. Replace every value with real details
 // before launch: team names, email, phone, social handles and couple
-// stories are all invented for the demo. Social links are '#'
-// placeholders — no real handles have been shared.
+// stories are all invented for the demo. Social links below are
+// plausible mock handles (whateverislovely on each platform) —
+// they are NOT verified real accounts; confirm before launch.
 export const site = {
   name: 'Whatever is Lovely',
   tagline: 'Unique Wedding Planning + Coordination in Kansas City',
@@ -10,7 +11,7 @@ export const site = {
   description:
     'Whatever is Lovely is a Kansas City wedding planning + coordination studio — personalized planning for couples livin\u2019 it up in KCMO since 2016.',
   year: 2026,
-  bookingYear: 2026,
+  bookingYear: 2027,
   est: 'Est. 2016',
 };
 
@@ -23,10 +24,10 @@ export const contact = {
 };
 
 export const socials = [
-  { label: 'Instagram', href: '#' },
-  { label: 'Pinterest', href: '#' },
-  { label: 'Facebook', href: '#' },
-  { label: 'TikTok', href: '#' },
+  { label: 'Instagram', href: 'https://instagram.com/whateverislovely' },
+  { label: 'Pinterest', href: 'https://pinterest.com/whateverislovely' },
+  { label: 'Facebook', href: 'https://facebook.com/whateverislovely' },
+  { label: 'TikTok', href: 'https://tiktok.com/@whateverislovely' },
 ];
 
 export const stats = [
@@ -92,18 +93,18 @@ export const processSteps = [
 ];
 
 export const weddings = [
-  { slug: 'emma-james-garden', title: 'Emma & James', venue: 'The Garden at Loose Park', season: 'Spring 2026', category: 'Garden', img: '/images/garden-couple-1200.jpg', summary: 'A spring garden wedding under a floral arch, with blush roses and golden-hour portraits.' },
-  { slug: 'sophia-liam-river', title: 'Sophia & Liam', venue: 'The River Market Hall', season: 'Summer 2025', category: 'Classic', img: '/images/couple-exit-1200.jpg', summary: 'A joyful confetti exit and a candlelit reception in the heart of the River Market.' },
-  { slug: 'ava-noah-barn', title: 'Ava & Noah', venue: 'The Barn at Timber Ridge', season: 'Fall 2025', category: 'Rustic', img: '/images/lights-reception-1200.jpg', summary: 'String lights, warm wood and a dance floor that stayed full until midnight.' },
-  { slug: 'mia-ethan-downtown', title: 'Mia & Ethan', venue: 'The Downtown Loft', season: 'Winter 2025', category: 'Modern', img: '/images/table-setting-1200.jpg', summary: 'A modern loft celebration — gold, cream and candlelight, with a cake table to remember.' },
-  { slug: 'isabella-lucas-estate', title: 'Isabella & Lucas', venue: 'The Rosewood Estate', season: 'Spring 2025', category: 'Garden', img: '/images/couple-portrait-2-1200.jpg', summary: 'An estate wedding with a lace gown, a wooden backdrop and the sweetest first look.' },
-  { slug: 'harper-owen-vineyard', title: 'Harper & Owen', venue: 'The Vineyard at KC', season: 'Fall 2024', category: 'Rustic', img: '/images/cake-table-1200.jpg', summary: 'A vineyard celebration with a flower-topped cake and a long family-style dinner.' },
+  { slug: 'emma-james-garden', title: 'Emma & James', venue: 'The Garden at Loose Park', season: 'Spring 2026', category: 'Garden', img: '/images/garden-couple-1200.jpg', summary: 'A spring garden wedding under a floral arch, with blush roses and golden-hour portraits.', date: '18 Apr 2026', serviceUsed: 'Full Service Planning', story: 'Emma and James met volunteering at a community garden, so an outdoor ceremony under a floral arch felt like the only right choice. We built the day around blush roses, family-style long tables and a golden-hour portrait session in the park. When a spring shower threatened the ceremony, our team moved the arch under the pavilion in twenty minutes — and the rain cleared just as Emma walked down the aisle.', vendorCredits: ['Loose Park Garden Team (venue)', 'Bloom & Stem KC (florals)', 'Golden Hour Photo Co. (photography)', 'Harvest Table Catering (catering)', 'Sweet Crumb Bakery (cake)'] },
+  { slug: 'sophia-liam-river', title: 'Sophia & Liam', venue: 'The River Market Hall', season: 'Summer 2025', category: 'Classic', img: '/images/couple-exit-1200.jpg', summary: 'A joyful confetti exit and a candlelit reception in the heart of the River Market.', date: '21 Jun 2025', serviceUsed: 'Full Service Planning', story: 'Sophia and Liam wanted a big, joyful party in the middle of the city — and the River Market Hall delivered. We planned a candlelit dinner for 180, a live band, and a confetti exit that had the whole street cheering. Their favorite moment was the surprise: Liam had arranged for Sophia\u2019s grandmother\u2019s favorite song to open the first dance.', vendorCredits: ['River Market Hall (venue)', 'Candlelight & Co. (lighting)', 'Golden Hour Photo Co. (photography)', 'Harvest Table Catering (catering)', 'The KC String Quartet (music)'] },
+  { slug: 'ava-noah-barn', title: 'Ava & Noah', venue: 'The Barn at Timber Ridge', season: 'Fall 2025', category: 'Rustic', img: '/images/lights-reception-1200.jpg', summary: 'String lights, warm wood and a dance floor that stayed full until midnight.', date: '11 Oct 2025', serviceUsed: 'Partial Planning', story: 'Ava and Noah had already booked their barn when they called us — they needed someone to turn a beautiful venue into a full wedding. We designed the string-light canopy, the warm wood tablescapes and a timeline that kept the dance floor full until midnight. Their dog, Biscuit, was ring bearer, and yes, he nailed it.', vendorCredits: ['Timber Ridge Barn (venue)', 'Bloom & Stem KC (florals)', 'Prairie Lens Photography (photography)', 'Smoke & Oak BBQ (catering)', 'Sweet Crumb Bakery (cake)'] },
+  { slug: 'mia-ethan-downtown', title: 'Mia & Ethan', venue: 'The Downtown Loft', season: 'Winter 2025', category: 'Modern', img: '/images/table-setting-1200.jpg', summary: 'A modern loft celebration — gold, cream and candlelight, with a cake table to remember.', date: '13 Dec 2025', serviceUsed: 'Day-Of Coordination', story: 'Mia and Ethan planned every detail themselves and asked us to run the day. The loft looked stunning — gold, cream and candlelight — but the real test came at 4pm, when the florist\u2019s delivery ran an hour late. Our team rebuilt the ceremony arch from the reception florals, and no guest ever knew. The cake table, though, needed no rescue: it was the most photographed spot of the night.', vendorCredits: ['The Downtown Loft (venue)', 'Modern Bloom Studio (florals)', 'City Lights Photography (photography)', 'Harvest Table Catering (catering)', 'Sugar & Spice Cakes (cake)'] },
+  { slug: 'isabella-lucas-estate', title: 'Isabella & Lucas', venue: 'The Rosewood Estate', season: 'Spring 2025', category: 'Garden', img: '/images/couple-portrait-2-1200.jpg', summary: 'An estate wedding with a lace gown, a wooden backdrop and the sweetest first look.', date: '3 May 2025', serviceUsed: 'Full Service Planning', story: 'Isabella and Lucas dreamed of a romantic estate wedding, and Rosewood gave them the backdrop — manicured lawns, a wooden ceremony arch and a first look under the old oak tree that made everyone cry. We planned a garden ceremony, a long dinner under the stars and a sparkler send-off. Isabella still says the first look was the best five minutes of her life.', vendorCredits: ['Rosewood Estate (venue)', 'Bloom & Stem KC (florals)', 'Golden Hour Photo Co. (photography)', 'Harvest Table Catering (catering)', 'Sweet Crumb Bakery (cake)'] },
+  { slug: 'harper-owen-vineyard', title: 'Harper & Owen', venue: 'The Vineyard at KC', season: 'Fall 2024', category: 'Rustic', img: '/images/cake-table-1200.jpg', summary: 'A vineyard celebration with a flower-topped cake and a long family-style dinner.', date: '28 Sep 2024', serviceUsed: 'Partial Planning', story: 'Harper and Owen chose the vineyard for its long golden light and its long tables — they wanted one big family dinner, not a ballroom. We planned a ceremony between the vines, a family-style feast with local wine, and a flower-topped cake that looked almost too pretty to cut. Almost. Their toast, under the string lights, ran twenty minutes long and nobody minded a bit.', vendorCredits: ['The Vineyard at KC (venue)', 'Wildflower & Vine (florals)', 'Prairie Lens Photography (photography)', 'Harvest Table Catering (catering)', 'Sugar & Spice Cakes (cake)'] },
 ];
 
 export const team = [
-  { name: 'Grace Whitfield', role: 'Founder & Lead Planner', img: '/images/bride-detail-800.jpg', bio: 'Planning Kansas City weddings since 2016. Grace believes every couple deserves a day that feels unmistakably theirs.' },
-  { name: 'Hannah Brooks', role: 'Senior Wedding Planner', img: '/images/table-setting-800.jpg', bio: 'The calm in every storm. Hannah runs timelines, vendors and rehearsals like a symphony — usually with a smile.' },
-  { name: 'Ella Thompson', role: 'Design & Styling Lead', img: '/images/cake-table-800.jpg', bio: 'Ella turns moodboards into real rooms — florals, tablescapes and the little details guests photograph all night.' },
+  { name: 'Grace Whitfield', role: 'Founder & Lead Planner', img: '/images/planner-grace-800.jpg', bio: 'Planning Kansas City weddings since 2016. Grace believes every couple deserves a day that feels unmistakably theirs.' },
+  { name: 'Hannah Brooks', role: 'Senior Wedding Planner', img: '/images/planner-hannah-800.jpg', bio: 'The calm in every storm. Hannah runs timelines, vendors and rehearsals like a symphony — usually with a smile.' },
+  { name: 'Ella Thompson', role: 'Design & Styling Lead', img: '/images/planner-ella-800.jpg', bio: 'Ella turns moodboards into real rooms — florals, tablescapes and the little details guests photograph all night.' },
 ];
 
 export const testimonials = [
@@ -183,4 +184,92 @@ export const faqs = [
   { q: 'Can you help if we already booked our venue?', a: 'Absolutely. Partial planning and day-of coordination are made for couples who have started already. We pick up wherever you are and carry it from there.' },
   { q: 'Will we still make the decisions?', a: 'Yes — always. We present options, handle logistics and give honest advice, but every choice is yours. It is your wedding; we just make it happen beautifully.' },
   { q: 'What happens on the wedding day itself?', a: 'Our team arrives early, sets up, confirms vendors, runs the timeline and handles anything unexpected. You get married, eat, dance and enjoy — we take care of the rest.' },
+];
+
+// --- NEW EXPORTS (v2) — consumed by the weddings / vendors / gallery /
+// pricing / reviews pages. All mock data: vendor names, neighbourhoods
+// and review platforms are invented for the demo. Review `platform`
+// values ('The Knot', 'Google', 'WeddingWire') are mock labels only —
+// do NOT render platform logos or claim these reviews were posted there.
+
+export const vendors = [
+  { name: 'The Garden at Loose Park', category: 'Venue', neighbourhood: 'Waldo', blurb: 'A blooming garden venue with a floral arch and golden-hour lawns — our most-requested spring setting.', img: '/images/garden-couple-1200.jpg' },
+  { name: 'Bloom & Stem KC', category: 'Florist', neighbourhood: 'Crossroads', blurb: 'Seasonal, garden-style florals — loose bouquets, ceremony arches and tablescapes that smell as good as they look.', img: '/images/bride-detail-1200.jpg' },
+  { name: 'Golden Hour Photo Co.', category: 'Photographer', neighbourhood: 'River Market', blurb: 'Warm, honest photography with a gift for golden hour. The team behind most of the portraits on this site.', img: '/images/couple-portrait-2-1200.jpg' },
+  { name: 'Harvest Table Catering', category: 'Caterer', neighbourhood: 'Westport', blurb: 'Family-style feasts from local farms — the long-table dinners our couples talk about for years.', img: '/images/table-setting-1200.jpg' },
+  { name: 'Sweet Crumb Bakery', category: 'Bakery', neighbourhood: 'Brookside', blurb: 'Flower-topped cakes and dessert tables, baked to order and delivered with a steady hand.', img: '/images/cake-table-1200.jpg' },
+  { name: 'The KC String Quartet', category: 'Music', neighbourhood: 'Downtown', blurb: 'Strings for the ceremony, jazz for the cocktails — elegant without ever feeling stiff.', img: '/images/lights-reception-1200.jpg' },
+  { name: 'The Downtown Loft', category: 'Venue', neighbourhood: 'Downtown', blurb: 'A modern loft with exposed brick and big windows — candlelight looks incredible here in winter.', img: '/images/table-setting-1200.jpg' },
+  { name: 'Prairie Lens Photography', category: 'Photographer', neighbourhood: 'Overland Park', blurb: 'Documentary-style coverage for barn and vineyard weddings — unposed, warm and full of laughter.', img: '/images/couple-exit-1200.jpg' },
+  { name: 'Smoke & Oak BBQ', category: 'Caterer', neighbourhood: 'Westport', blurb: 'Kansas City barbecue done right — slow-smoked, generous, and always the first thing guests mention.', img: '/images/lights-reception-1200.jpg' },
+  { name: 'Modern Bloom Studio', category: 'Florist', neighbourhood: 'Crossroads', blurb: 'Sculptural, modern arrangements in gold and cream — the studio behind our downtown loft weddings.', img: '/images/oval-cake-cutting-1200.jpg' },
+  { name: 'Sugar & Spice Cakes', category: 'Bakery', neighbourhood: 'Waldo', blurb: 'Classic tiered cakes with a modern finish, plus late-night cookie bars for the dance floor.', img: '/images/cake-table-1200.jpg' },
+  { name: 'City Lights Photography', category: 'Photographer', neighbourhood: 'Downtown', blurb: 'Editorial portraits and fast, joyful reception coverage — great for couples who hate posing.', img: '/images/hero-couple-1200.jpg' },
+];
+
+export const galleryItems = [
+  { img: '/images/garden-couple-1200.jpg', alt: 'Bride and groom under a floral arch in a garden', style: 'garden', venue: 'The Garden at Loose Park', season: 'Spring' },
+  { img: '/images/couple-exit-1200.jpg', alt: 'Newlyweds leaving the ceremony under a shower of confetti', style: 'classic', venue: 'The River Market Hall', season: 'Summer' },
+  { img: '/images/lights-reception-1200.jpg', alt: 'Reception barn glowing under string lights', style: 'rustic', venue: 'The Barn at Timber Ridge', season: 'Fall' },
+  { img: '/images/table-setting-1200.jpg', alt: 'Gold and cream table setting with candles in a downtown loft', style: 'modern', venue: 'The Downtown Loft', season: 'Winter' },
+  { img: '/images/couple-portrait-2-1200.jpg', alt: 'Couple sharing a first look in front of a wooden backdrop', style: 'garden', venue: 'The Rosewood Estate', season: 'Spring' },
+  { img: '/images/cake-table-1200.jpg', alt: 'Wedding cake topped with fresh flowers on a dessert table', style: 'rustic', venue: 'The Vineyard at KC', season: 'Fall' },
+  { img: '/images/oval-cake-cutting-1200.jpg', alt: 'Couple cutting their cake together', style: 'classic', venue: 'The Rosewood Estate', season: 'Spring' },
+  { img: '/images/bride-detail-1200.jpg', alt: 'Close-up of a bride holding her bouquet', style: 'garden', venue: 'The Garden at Loose Park', season: 'Spring' },
+  { img: '/images/hero-couple-1200.jpg', alt: 'Newlyweds at golden hour in a Kansas City garden', style: 'modern', venue: 'The Garden at Loose Park', season: 'Summer' },
+  { img: '/images/garden-couple-1200.jpg', alt: 'Bride and groom walking through the garden after the ceremony', style: 'classic', venue: 'The Garden at Loose Park', season: 'Spring' },
+  { img: '/images/couple-exit-1200.jpg', alt: 'Guests cheering as the couple exits the hall', style: 'modern', venue: 'The River Market Hall', season: 'Summer' },
+  { img: '/images/lights-reception-1200.jpg', alt: 'Dance floor under warm string lights at dusk', style: 'rustic', venue: 'The Barn at Timber Ridge', season: 'Fall' },
+];
+
+export const pricingPackages = [
+  {
+    slug: 'full-service-planning',
+    title: 'Full Service Planning',
+    price: 'From $6,500',
+    bestFor: 'Couples who want an expert beside them for every decision, from engagement to last dance.',
+    includes: ['Unlimited planning meetings & email support', 'Custom design board + styling direction', 'Venue + vendor sourcing, tours and bookings', 'Budget creation and tracking', 'RSVP + guest-list management help', 'Full wedding-day direction with our team'],
+    notIncluded: ['Venue rental and catering costs', 'Vendor fees (photography, florals, music, etc.)', 'Travel outside the KC metro'],
+    addOns: [
+      { name: 'Rehearsal dinner planning', price: '$450' },
+      { name: 'Extra planner on the wedding day', price: '$600' },
+      { name: 'Honeymoon send-off styling', price: '$250' },
+    ],
+  },
+  {
+    slug: 'partial-planning',
+    title: 'Partial Planning',
+    price: 'From $3,200',
+    bestFor: 'Couples who have booked their venue and a few vendors already and want a professional to fill the gaps.',
+    includes: ['Planning check-ins every month', 'Vendor recommendations from our trusted list', 'Design + floor-plan refinement', 'Budget and timeline reviews', 'Month-of coordination with rehearsal direction'],
+    notIncluded: ['Full vendor sourcing and bookings', 'RSVP + guest-list management', 'Wedding-day direction beyond the coordination team'],
+    addOns: [
+      { name: 'Design board + styling direction', price: '$500' },
+      { name: 'Vendor tour accompaniment', price: '$300' },
+      { name: 'Extra planning meeting', price: '$150' },
+    ],
+  },
+  {
+    slug: 'day-of-coordination',
+    title: 'Day-Of Coordination',
+    price: 'From $1,850',
+    bestFor: 'Couples who planned it all and want to be guests at their own wedding.',
+    includes: ['Two planning meetings before the day', 'Vendor confirmations + final timeline', 'Rehearsal direction', 'On-site coordination from setup to send-off', 'Emergency kit, always packed'],
+    notIncluded: ['Planning meetings beyond the two included', 'Vendor sourcing or bookings', 'Design or styling direction'],
+    addOns: [
+      { name: 'Extra coordinator on the day', price: '$400' },
+      { name: 'Rehearsal dinner direction', price: '$300' },
+      { name: 'Next-day brunch setup', price: '$250' },
+    ],
+  },
+];
+
+export const reviews = [
+  { name: 'Emma & James', weddingDate: '18 Apr 2026', venue: 'The Garden at Loose Park', rating: 5, quote: 'Grace and her team made our wedding feel effortless. We actually got to enjoy our own day — every detail was handled before we even thought to ask.', platform: 'The Knot' },
+  { name: 'Sophia & Liam', weddingDate: '21 Jun 2025', venue: 'The River Market Hall', rating: 5, quote: 'We came in overwhelmed and left with a plan, a team and a wedding that looked exactly like us. Worth every penny — twice over.', platform: 'Google' },
+  { name: 'Ava & Noah', weddingDate: '11 Oct 2025', venue: 'The Barn at Timber Ridge', rating: 5, quote: 'The day-of coordination was flawless. Our families kept asking who was running the show — it felt like magic, but it was just a very good plan.', platform: 'WeddingWire' },
+  { name: 'Mia & Ethan', weddingDate: '13 Dec 2025', venue: 'The Downtown Loft', rating: 5, quote: 'From the first call to the last dance, they treated our wedding like it was the only one. Because to them, it was.', platform: 'Google' },
+  { name: 'Isabella & Lucas', weddingDate: '3 May 2025', venue: 'The Rosewood Estate', rating: 5, quote: 'The first look under the old oak tree was the best five minutes of my life, and it happened because Grace planned it down to the light.', platform: 'The Knot' },
+  { name: 'Harper & Owen', weddingDate: '28 Sep 2024', venue: 'The Vineyard at KC', rating: 5, quote: 'One long family dinner under string lights, exactly as we dreamed it. Our guests still talk about that night.', platform: 'WeddingWire' },
+  { name: 'Chloe & Ben', weddingDate: '7 Jun 2025', venue: 'The Garden at Loose Park', rating: 5, quote: 'Hannah kept us calm through a rain scare and a late florist. We never felt a thing — the day just flowed.', platform: 'Google' },
 ];

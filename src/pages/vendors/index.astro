@@ -1,0 +1,76 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Picture from '../../components/Picture.astro';
+import StickyBar from '../../components/StickyBar.astro';
+import { vendors } from '../../data/site';
+const pic = (img: string) => img.replace('/images/', '').replace(/-\d+\.jpg$/, '');
+const categories = ['All', ...Array.from(new Set(vendors.map((v) => v.category)))];
+---
+<Layout
+  title="Preferred Vendors & Venue Partners — Whatever is Lovely | Kansas City"
+  description="Our preferred Kansas City wedding vendors — venues, florists, photographers, caterers, bakeries and musicians we've actually worked with."
+  ogImage="https://whatever-is-lovely.pages.dev/images/venue-barn-1200.jpg"
+>
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">Preferred Vendors</p>
+    <h1 data-split class="mt-2 text-center font-display text-5xl font-semibold uppercase text-terra sm:text-6xl">A team we trust with your day</h1>
+    <p class="reveal mx-auto mt-4 max-w-2xl text-center leading-relaxed text-ink-soft">Every vendor below is someone we've actually worked with — and would happily work with again. No paid listings, no kickbacks: just the Kansas City people who make our weddings lovely. Vendor names and details are mock placeholders for the demo.</p>
+
+    <div class="reveal mt-10 flex flex-wrap justify-center gap-2" role="group" aria-label="Filter vendors by category">
+      {categories.map((c) => (
+        <button
+          type="button"
+          data-filter={c.toLowerCase()}
+          aria-pressed={c === 'All' ? 'true' : 'false'}
+          class:list={['min-h-[44px] rounded-full border px-5 py-2.5 text-sm font-bold uppercase tracking-wider transition', c === 'All' ? 'border-terra bg-terra text-white' : 'border-line bg-white text-terra hover:border-terra']}
+        >{c}</button>
+      ))}
+    </div>
+    <p id="vendor-count" class="mt-4 text-center text-sm font-semibold text-ink-soft" aria-live="polite">{vendors.length} vendors</p>
+
+    <div id="vendor-grid" class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {vendors.map((v) => (
+        <article class="wedding-card reveal overflow-hidden rounded-2xl bg-white shadow-sm" data-category={v.category.toLowerCase()}>
+          <Picture name={pic(v.img)} alt={`${v.name} — ${v.category} in ${v.neighbourhood}, Kansas City`} sizes="(max-width: 768px) 100vw, 380px" imgClass="aspect-[4/3] w-full object-cover" />
+          <div class="p-5">
+            <p class="text-xs font-bold uppercase tracking-wider text-gold-text">{v.category} · {v.neighbourhood}</p>
+            <h2 class="mt-1 font-display text-2xl font-semibold text-terra">{v.name}</h2>
+            <p class="mt-2 text-sm leading-relaxed text-ink-soft">{v.blurb}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+    <p id="vendor-empty" class="mt-8 hidden text-center text-ink-soft">No vendors in this category yet — try another filter.</p>
+    <div class="reveal mt-12 text-center">
+      <p class="font-script text-5xl text-terra">want our vendor list for your wedding?</p>
+      <a href="/book/" class="mt-5 inline-block rounded-sm bg-gold px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white">Book a Free Consultation</a>
+    </div>
+  </section>
+  <StickyBar />
+</Layout>
+<script>
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+  const cards = [...document.querySelectorAll<HTMLElement>('#vendor-grid [data-category]')];
+  const count = document.getElementById('vendor-count');
+  const empty = document.getElementById('vendor-empty');
+  const apply = (filter: string) => {
+    let shown = 0;
+    cards.forEach((c) => {
+      const show = filter === 'all' || c.dataset.category === filter;
+      c.classList.toggle('hidden', !show);
+      if (show) shown += 1;
+    });
+    if (count) count.textContent = shown === 1 ? '1 vendor' : `${shown} vendors`;
+    empty?.classList.toggle('hidden', shown > 0);
+    buttons.forEach((b) => {
+      const active = b.dataset.filter === filter;
+      b.setAttribute('aria-pressed', String(active));
+      b.classList.toggle('border-terra', active);
+      b.classList.toggle('bg-terra', active);
+      b.classList.toggle('text-white', active);
+      b.classList.toggle('bg-white', !active);
+      b.classList.toggle('text-terra', !active);
+    });
+  };
+  buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter ?? 'all')));
+</script>

@@ -44,6 +44,11 @@ if (!reduced) {
     }
   });
   gsap.from('[data-hero]', { y: 16, opacity: 0, duration: 0.6, ease: 'power3.out', stagger: 0.06, delay: 0 });
+  // Hero children marked [data-hero-item] enter in sequence after the hero
+  // container (index adds the attribute; this code is the entrance itself).
+  document.querySelectorAll<HTMLElement>('[data-hero-item]').forEach((el, i) => {
+    gsap.from(el, { y: 18, opacity: 0, duration: 0.55, ease: 'power3.out', delay: 0.08 + i * 0.07 });
+  });
   document.querySelectorAll<HTMLElement>('.reveal').forEach((el) => {
     const siblings = [...(el.parentElement?.children ?? [])].filter((c) => c.classList.contains('reveal'));
     const delay = Math.min(Math.max(siblings.indexOf(el), 0) * 0.07, 0.21);
@@ -54,10 +59,9 @@ if (!reduced) {
     const obj = { v: 0 };
     gsap.to(obj, { v: target, duration: 1.6, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 92%' }, onUpdate: () => { el.textContent = Math.round(obj.v).toLocaleString('en-US'); } });
   });
-  const heroPar = document.querySelector('[data-parallax]');
-  if (heroPar) {
-    gsap.to(heroPar, { yPercent: 5, ease: 'none', scrollTrigger: { trigger: heroPar.closest('section'), start: 'top top', end: 'bottom top', scrub: true } });
-  }
+  document.querySelectorAll<HTMLElement>('[data-parallax]').forEach((el) => {
+    gsap.to(el, { yPercent: 5, ease: 'none', scrollTrigger: { trigger: el.closest('section') ?? el, start: 'top top', end: 'bottom top', scrub: true } });
+  });
   document.querySelectorAll<HTMLElement>('[data-parallax-img]').forEach((img) => {
     gsap.fromTo(img, { yPercent: -4 }, { yPercent: 4, ease: 'none', scrollTrigger: { trigger: img.closest('figure, div') ?? img, start: 'top bottom', end: 'bottom top', scrub: true } });
   });
@@ -115,7 +119,9 @@ const go = (i: number) => {
   track.style.transform = `translateX(-${idx * 100}%)`;
   dots.forEach((d, di) => {
     d.classList.toggle('bg-gold', di === idx);
-    d.classList.toggle('bg-ink/20', di !== idx);
+    // Inactive dots are bg-white/30 — the slider sits on a dark terra
+    // section, so the old bg-ink/20 was nearly invisible there.
+    d.classList.toggle('bg-white/30', di !== idx);
     if (di === idx) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
   });
 };
@@ -169,7 +175,7 @@ document.querySelectorAll<HTMLElement>('[data-faq-btn]').forEach((btn) => {
   });
 });
 
-// Forms: inline per-field validation + toast (mailto unchanged)
+// Forms: inline per-field validation + toast (all mock — localStorage only, no mailto)
 function fieldError(input: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement, msg: string) {
   const err = document.getElementById(`${input.id}-error`);
   if (err) { err.textContent = msg; err.classList.remove('invisible'); }
@@ -201,7 +207,8 @@ function validRequired(input: HTMLInputElement | HTMLSelectElement | null, msg: 
   fieldClear(input); return true;
 }
 
-// Work With Us form (mock — no charge, opens mail app)
+// Work With Us form (mock — stored in the visitor's browser only, no
+// mail app, no email sent). Past dates are rejected; Sundays are fine.
 const wf = document.getElementById('work-form') as HTMLFormElement | null;
 if (wf) {
   const name = document.getElementById('wf-name') as HTMLInputElement;
@@ -209,27 +216,54 @@ if (wf) {
   const date = document.getElementById('wf-date') as HTMLInputElement;
   const service = document.getElementById('wf-service') as HTMLSelectElement;
   const msg = document.getElementById('wf-message') as HTMLTextAreaElement;
+  // min=today, set at runtime so it is always the real today.
+  const todayIso = new Date().toLocaleDateString('en-CA');
+  date.min = todayIso;
+  const validDate = (input: HTMLInputElement) => {
+    if (!input.value) { fieldError(input, 'Please pick your wedding date (or your best guess).'); return false; }
+    if (input.value < todayIso) { fieldError(input, 'That date is in the past — please pick a future date.'); return false; }
+    fieldClear(input); return true;
+  };
   name.addEventListener('blur', () => validName(name));
   email.addEventListener('blur', () => validEmail(email));
-  date.addEventListener('blur', () => validRequired(date, 'Please pick your wedding date (or your best guess).'));
+  date.addEventListener('blur', () => validDate(date));
+  date.addEventListener('change', () => validDate(date));
   service.addEventListener('change', () => validRequired(service, 'Please choose a service.'));
   msg.addEventListener('blur', () => validMsg(msg));
   wf.addEventListener('submit', (e) => {
     e.preventDefault();
-    const ok = [validName(name), validEmail(email), validRequired(date, 'Please pick your wedding date (or your best guess).'), validRequired(service, 'Please choose a service.'), validMsg(msg)];
+    const ok = [validName(name), validEmail(email), validDate(date), validRequired(service, 'Please choose a service.'), validMsg(msg)];
     if (ok.includes(false)) { (document.querySelector('[aria-invalid="true"]') as HTMLElement)?.focus(); return; }
-    const body = `Hi Whatever is Lovely team,\n\nWe would love to work with you!\n\nName: ${name.value.trim()}\nEmail: ${email.value.trim()}\nWedding date: ${date.value}\nService: ${service.value}\n\n${msg.value.trim()}`;
-    const okEl = document.getElementById('work-form-ok');
-    okEl?.classList.remove('hidden');
-    showToast('Thanks — opening your mail app…');
-    window.setTimeout(() => {
-      window.location.href = `mailto:hello@whateverislovely.com?subject=${encodeURIComponent('New wedding enquiry — ' + name.value.trim() + ' — ' + date.value)}&body=${encodeURIComponent(body)}`;
-    }, 500);
+    const ref = 'WL-' + Array.from({ length: 6 }, () => 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 31)]).join('');
+    const enquiry = {
+      ref,
+      name: name.value.trim(),
+      email: email.value.trim(),
+      date: date.value,
+      service: service.value,
+      message: msg.value.trim(),
+      submittedAt: new Date().toISOString(),
+    };
+    try {
+      const prev = JSON.parse(localStorage.getItem('wil-enquiries') ?? '[]') as unknown[];
+      prev.push(enquiry);
+      localStorage.setItem('wil-enquiries', JSON.stringify(prev));
+    } catch { /* private mode — the on-screen confirmation still shows */ }
+    const refEl = document.getElementById('wf-ref');
+    if (refEl) refEl.textContent = ref;
+    const summaryEl = document.getElementById('wf-summary');
+    if (summaryEl) {
+      const niceDate = new Date(`${date.value}T12:00:00`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      summaryEl.textContent = `${name.value.trim()} · ${email.value.trim()} · ${niceDate} · ${service.value}`;
+    }
+    document.getElementById('work-form-ok')?.classList.remove('hidden');
+    document.getElementById('work-form-ok')?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'nearest' });
+    showToast(`Thanks — enquiry ${ref} saved.`);
     wf.reset();
   });
 }
 
-// Newsletter (footer)
+// Newsletter (footer) — mock: stored in the visitor's browser only.
 const nf = document.getElementById('newsletter-form') as HTMLFormElement | null;
 if (nf) {
   const email = document.getElementById('newsletter-email') as HTMLInputElement;
@@ -237,6 +271,7 @@ if (nf) {
   nf.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!validEmail(email)) { email.focus(); return; }
+    try { localStorage.setItem('wil-newsletter', email.value.trim()); } catch { /* private mode */ }
     document.getElementById('newsletter-ok')?.classList.remove('hidden');
     showToast('Thanks — you are on the list.');
     nf.reset();

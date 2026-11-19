@@ -1,28 +1,137 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { site } from '../data/site';
+import { site, services, weddings, blogPosts, faqs } from '../data/site';
 const q = Astro.url.searchParams.get('q') ?? '';
+
+// Search index, built at build time from the mock data + the site's pages.
+// Serialized into the page with define:vars — no fetch, no server needed.
+const searchIndex = [
+  ...services.map((s) => ({ title: s.title, url: `/services/${s.slug}/`, kind: 'Service', snippet: `${s.short} ${s.price}.` })),
+  ...weddings.map((w) => ({ title: `${w.title} — ${w.venue}`, url: `/weddings/${w.slug}/`, kind: 'Real Wedding', snippet: `${w.summary} ${w.season} · ${w.serviceUsed}.` })),
+  ...blogPosts.map((p) => ({ title: p.title, url: `/blog/${p.slug}/`, kind: 'Blog', snippet: p.excerpt })),
+  ...faqs.map((f) => ({ title: f.q, url: '/faq/', kind: 'FAQ', snippet: f.a })),
+  { title: 'Services', url: '/services/', kind: 'Page', snippet: 'Full service planning, partial planning and day-of coordination — packages, prices and what each includes.' },
+  { title: 'Book Your Date', url: '/book/', kind: 'Page', snippet: `Pick your service, your planner and your date. Now booking ${site.bookingYear} weddings.` },
+  { title: 'Pricing', url: '/pricing/', kind: 'Page', snippet: 'Wedding planning packages from $1,850 — what is included, what is not, and optional add-ons.' },
+  { title: 'Real Weddings', url: '/weddings/', kind: 'Page', snippet: 'Garden, classic, rustic and modern weddings we planned across Kansas City — with stories and vendor credits.' },
+  { title: 'Reviews', url: '/reviews/', kind: 'Page', snippet: 'What our couples say about planning their wedding with Whatever is Lovely.' },
+  { title: 'Vendors', url: '/vendors/', kind: 'Page', snippet: 'The Kansas City venues, florists, photographers, caterers, bakers and musicians we love working with.' },
+  { title: 'Gallery', url: '/gallery/', kind: 'Page', snippet: 'Photos from real Kansas City weddings — garden, classic, rustic and modern.' },
+  { title: 'Our Team', url: '/our-team/', kind: 'Page', snippet: 'Meet Grace, Hannah and Ella — the planners behind Whatever is Lovely.' },
+  { title: 'Our Process', url: '/process/', kind: 'Page', snippet: 'How planning with us works, from the first hello to the last dance.' },
+  { title: 'About', url: '/about/', kind: 'Page', snippet: `Whatever is Lovely — a Kansas City wedding planning studio, ${site.est}.` },
+  { title: 'Contact', url: '/contact/', kind: 'Page', snippet: 'Email, phone and studio hours — reach out and we reply within one business day.' },
+  { title: 'Work With Us', url: '/work-with-us/', kind: 'Page', snippet: 'Tell us about your wedding and we will reply with next steps and honest availability.' },
+  { title: 'The Blog', url: '/blog/', kind: 'Page', snippet: 'Planning tips, venue guides and honest budget advice from our Kansas City planners.' },
+];
+const popular = [
+  { href: '/services/', label: 'Services', note: 'Packages from $1,850' },
+  { href: '/book/', label: 'Book Your Date', note: `Now booking ${site.bookingYear}` },
+  { href: '/weddings/', label: 'Real Weddings', note: 'Stories + photos' },
+  { href: '/faq/', label: 'FAQ', note: 'Costs, timing, travel' },
+];
 ---
 <Layout title="Search — Whatever is Lovely" robots="noindex">
   <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-    <p class="text-center text-xs font-bold uppercase tracking-[0.35em] text-gold">Search</p>
+    <p class="text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">Search</p>
     <h1 class="mt-2 text-center font-display text-5xl font-semibold uppercase text-terra">Search the site</h1>
-    <form method="get" action="/search/" class="mx-auto mt-8 flex max-w-xl overflow-hidden rounded-full border border-line bg-white shadow-sm">
+    <form id="search-form" method="get" action="/search/" class="mx-auto mt-8 flex max-w-xl overflow-hidden rounded-full border border-line bg-white shadow-sm">
       <label class="sr-only" for="search-q">Search</label>
-      <input id="search-q" name="q" type="search" value={q} placeholder="Try “day-of coordination”…" class="w-full bg-transparent px-5 py-3.5 outline-none placeholder:text-ink-soft/50" />
-      <button type="submit" class="shrink-0 bg-gold px-6 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-gold-deep">Search</button>
+      <input id="search-q" name="q" type="search" value={q} placeholder="Try “day-of coordination”…" autocomplete="off" class="w-full bg-transparent px-5 py-3.5 outline-none placeholder:text-ink-soft/50" />
+      <button type="submit" class="shrink-0 bg-gold px-6 text-sm font-bold uppercase tracking-wider text-ink transition hover:bg-terra hover:text-white">Search</button>
     </form>
-    {q && (
-      <div class="mt-8">
-        <p class="text-center text-ink-soft">Results for “<strong class="text-terra">{q}</strong>” — this is a demo search page. Try one of these instead:</p>
-        <ul class="mt-6 grid gap-3 sm:grid-cols-2">
-          <li><a href="/services/" class="block rounded-2xl border border-line bg-white p-5 font-display text-xl font-semibold text-terra transition hover:border-gold">Services</a></li>
-          <li><a href="/blog/" class="block rounded-2xl border border-line bg-white p-5 font-display text-xl font-semibold text-terra transition hover:border-gold">The Blog</a></li>
-          <li><a href="/faq/" class="block rounded-2xl border border-line bg-white p-5 font-display text-xl font-semibold text-terra transition hover:border-gold">FAQ</a></li>
-          <li><a href="/work-with-us/" class="block rounded-2xl border border-line bg-white p-5 font-display text-xl font-semibold text-terra transition hover:border-gold">Work With Us</a></li>
-        </ul>
-      </div>
-    )}
+    <div id="search-results" aria-live="polite" class="mt-8"></div>
+    <div id="search-popular" class="mt-8">
+      <p class="text-center text-ink-soft">Popular right now:</p>
+      <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+        {popular.map((p) => (
+          <li><a href={p.href} class="block rounded-2xl border border-line bg-white p-5 transition hover:border-gold"><span class="block font-display text-xl font-semibold text-terra">{p.label}</span><span class="mt-1 block text-sm text-ink-soft">{p.note}</span></a></li>
+        ))}
+      </ul>
+    </div>
     <p class="mt-8 text-center text-xs text-ink-soft/70">© {site.year} Whatever is Lovely · Kansas City, MO</p>
   </section>
+  <script define:vars={{ index: searchIndex }}>
+    const input = document.getElementById('search-q');
+    const resultsEl = document.getElementById('search-results');
+    const popularEl = document.getElementById('search-popular');
+    const norm = (s) => s.toLowerCase();
+    function search(query) {
+      const terms = norm(query).split(/\s+/).filter(Boolean);
+      if (!terms.length) return [];
+      return index
+        .map((entry) => {
+          const hay = norm(entry.title + ' ' + entry.snippet + ' ' + entry.kind);
+          let score = 0;
+          for (const t of terms) {
+            if (norm(entry.title).includes(t)) score += 3;
+            else if (hay.includes(t)) score += 1;
+            else return null;
+          }
+          return { entry, score };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.score - a.score)
+        .map((r) => r.entry);
+    }
+    function render(query) {
+      const q = (query || '').trim();
+      resultsEl.textContent = '';
+      if (!q) { popularEl.classList.remove('hidden'); return; }
+      popularEl.classList.add('hidden');
+      const hits = search(q);
+      const heading = document.createElement('p');
+      heading.className = 'text-center text-ink-soft';
+      if (hits.length) {
+        heading.innerHTML = '';
+        heading.append(document.createTextNode(`Found ${hits.length} result${hits.length === 1 ? '' : 's'} for “${q}”`));
+      } else {
+        heading.append(document.createTextNode(`No results for “${q}” — try “planning”, “venues” or “budget”.`));
+      }
+      resultsEl.append(heading);
+      if (!hits.length) {
+        const sug = document.createElement('p');
+        sug.className = 'mt-4 text-center text-sm text-ink-soft';
+        sug.append(document.createTextNode('Or browse: '));
+        [['Services', '/services/'], ['Real Weddings', '/weddings/'], ['FAQ', '/faq/']].forEach(([label, href], i) => {
+          if (i) sug.append(document.createTextNode(' · '));
+          const a = document.createElement('a');
+          a.href = href; a.className = 'font-semibold text-terra underline'; a.textContent = label;
+          sug.append(a);
+        });
+        resultsEl.append(sug);
+        return;
+      }
+      const list = document.createElement('ul');
+      list.className = 'mt-6 space-y-3';
+      for (const hit of hits) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = hit.url;
+        a.className = 'block rounded-2xl border border-line bg-white p-5 transition hover:border-gold';
+        const kind = document.createElement('p');
+        kind.className = 'text-xs font-bold uppercase tracking-wider text-gold-text';
+        kind.textContent = hit.kind;
+        const title = document.createElement('h2');
+        title.className = 'mt-1 font-display text-xl font-semibold text-terra';
+        title.textContent = hit.title;
+        const snip = document.createElement('p');
+        snip.className = 'mt-1 text-sm leading-relaxed text-ink-soft';
+        snip.textContent = hit.snippet;
+        a.append(kind, title, snip);
+        li.append(a);
+        list.append(li);
+      }
+      resultsEl.append(list);
+    }
+    const params = new URLSearchParams(window.location.search);
+    render(params.get('q') || '');
+    input.addEventListener('input', () => {
+      const next = new URL(window.location.href);
+      if (input.value.trim()) next.searchParams.set('q', input.value);
+      else next.searchParams.delete('q');
+      window.history.replaceState(null, '', next);
+      render(input.value);
+    });
+  </script>
 </Layout>

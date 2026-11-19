@@ -9,6 +9,12 @@
   --color-terra-dark: #6e3a22;
   --color-gold: #b9973f;
   --color-gold-deep: #a8842f;
+  /* Text-safe gold: dark gold for small text on cream/white.
+     Contrast (WCAG): #7a5c1a on cream #fdf8f1 = 5.89:1, on white = 6.23:1.
+     Bright --color-gold stays for fills / large display only — white on
+     gold is 2.78:1, so never put white text on a gold background. */
+  --color-gold-text: #7a5c1a;
+  --color-gold-ink: #4a2c1e;
   --color-cream: #fdf8f1;
   --color-cream-2: #faf3ea;
   --color-ink: #4a2c1e;
@@ -28,7 +34,7 @@
 html { scroll-behavior: smooth; }
 html, body { overflow-x: clip; }
 body { background: #fdf8f1; color: #4a2c1e; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
-::selection { background: #b9973f; color: #fff; }
+::selection { background: #b9973f; color: #4a2c1e; }
 .font-display { font-family: var(--font-display); }
 .font-script { font-family: var(--font-script); }
 
@@ -52,7 +58,7 @@ body { background: #fdf8f1; color: #4a2c1e; font-family: var(--font-sans); -webk
 #site-header.header-hidden { transform: translateY(-115%); }
 #back-to-top { position: fixed; right: 1rem; bottom: 1rem; z-index: 70; display: grid; height: 3rem; width: 3rem; place-items: center; border-radius: 9999px; background: #9a5a38; color: #fff; font-weight: 800; box-shadow: 0 8px 24px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.2s ease; }
 #back-to-top.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
-#back-to-top:hover { background: #b9973f; }
+#back-to-top:hover { background: #8a4b2d; }
 #toast { position: fixed; left: 50%; bottom: 1.5rem; z-index: 96; max-width: calc(100vw - 2rem); transform: translate(-50%, 16px); border-radius: 9999px; background: #9a5a38; color: #fff; padding: 0.75rem 1.25rem; font-size: 0.875rem; font-weight: 700; box-shadow: 0 12px 32px rgba(0,0,0,0.35); opacity: 0; pointer-events: none; transition: opacity 0.25s ease, transform 0.25s ease; text-align: center; }
 #toast.show { opacity: 1; transform: translate(-50%, 0); }
 

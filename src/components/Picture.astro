@@ -3,6 +3,16 @@
 // format (480 / 800 / 1200 / 1600, capped at native width), native lazy
 // loading except the hero (eager + fetchpriority high). Never hotlinked:
 // every image is generated and converted locally.
+//
+// Dimensions: read from the master PNG in masters/ via sharp at build
+// time, so width/height always match the real file. If no master exists
+// (e.g. portraits still being generated), fall back to explicit
+// width/height props, then portrait defaults (1200x1800) for
+// 'planner-*' / 'oval-*' names and landscape defaults (1200x800) for
+// everything else. The <img> fallback src is the MIDDLE width (800w
+// when available), never the largest file.
+import sharp from 'sharp';
+import { existsSync } from 'node:fs';
 interface Props {
   name: string;
   alt: string;
@@ -12,13 +22,31 @@ interface Props {
   class?: string;
   imgClass?: string;
   ratio?: string;
+  width?: number;
+  height?: number;
 }
-const { name, alt, widths = [480, 800, 1200, 1600], sizes, eager = false, class: cls = '', imgClass = '', ratio } = Astro.props;
-import { existsSync } from 'node:fs';
+const { name, alt, widths = [480, 800, 1200, 1600], sizes, eager = false, class: cls = '', imgClass = '', ratio, width: widthProp, height: heightProp } = Astro.props;
 const avail = widths.filter((w) => existsSync(`public/images/${name}-${w}.jpg`));
 const useWidths = avail.length ? avail : widths;
 const srcset = (ext: string) => useWidths.map((w) => `/images/${name}-${w}.${ext} ${w}w`).join(', ');
-const fallback = `/images/${name}-${useWidths[useWidths.length - 1]}.jpg`;
+const mid = useWidths[Math.floor(useWidths.length / 2)];
+const fallback = `/images/${name}-${mid}.jpg`;
+let width = widthProp;
+let height = heightProp;
+if (!width || !height) {
+  const master = `masters/${name}.png`;
+  if (existsSync(master)) {
+    const meta = await sharp(master).metadata();
+    width = meta.width;
+    height = meta.height;
+  } else if (name.startsWith('planner-') || name.startsWith('oval-')) {
+    width = 1200;
+    height = 1800;
+  } else {
+    width = 1200;
+    height = 800;
+  }
+}
 const style = ratio ? `aspect-ratio: ${ratio};` : undefined;
 ---
 <picture class={cls} style={style}>
@@ -33,7 +61,7 @@ const style = ratio ? `aspect-ratio: ${ratio};` : undefined;
     decoding="async"
     fetchpriority={eager ? 'high' : undefined}
     class={imgClass}
-    width="1200"
-    height="800"
+    width={width}
+    height={height}
   />
 </picture>

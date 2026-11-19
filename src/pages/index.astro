@@ -1,21 +1,51 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Picture from '../components/Picture.astro';
-import { services, processSteps, weddings, team, testimonials, blogPosts, faqs, stats } from '../data/site';
+import StickyBar from '../components/StickyBar.astro';
+import { services, processSteps, weddings, team, testimonials, blogPosts, faqs, stats, site } from '../data/site';
+const serviceImgs: Record<string, string> = {
+  'full-service-planning': 'venue-garden',
+  'partial-planning': 'decor-florals',
+  'day-of-coordination': 'reception-candles',
+};
+const processImgs = ['couple-portrait-2', 'decor-florals', 'table-setting', 'couple-exit'];
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
+  '@type': 'EventPlanner',
   name: 'Whatever is Lovely',
   description: 'Kansas City wedding planning + coordination studio.',
-  address: { '@type': 'PostalAddress', addressLocality: 'Kansas City', addressRegion: 'MO', addressCountry: 'US' },
-  foundingDate: '2016',
   url: 'https://whatever-is-lovely.pages.dev/',
+  foundingDate: '2016',
+  priceRange: '$$$$',
+  address: { '@type': 'PostalAddress', addressLocality: 'Kansas City', addressRegion: 'MO', addressCountry: 'US' },
+  geo: { '@type': 'GeoCoordinates', latitude: 39.0997, longitude: -94.5786 },
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '17:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '09:00', closes: '17:00', description: 'By appointment' },
+  ],
+  areaServed: { '@type': 'City', name: 'Kansas City' },
+  aggregateRating: { '@type': 'AggregateRating', ratingValue: 4.9, reviewCount: 312 },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Wedding planning services',
+    itemListElement: services.map((s) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', name: s.title, description: s.short },
+    })),
+  },
 };
 ---
 <Layout title="Whatever is Lovely — Kansas City Wedding Planning + Coordination" jsonLd={jsonLd}>
   <!-- Hero -->
-  <section class="relative" aria-label="Wedding photo">
+  <section class="relative" aria-label="Wedding photo" data-hero>
     <Picture name="hero-couple" alt="Groom in a taupe suit kissing his bride's forehead at golden hour under string lights" eager sizes="100vw" imgClass="h-[62vh] w-full object-cover sm:h-[78vh]" />
+    <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/25 to-transparent" aria-hidden="true"></div>
+    <div class="absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-4 pb-14 sm:px-6">
+      <p data-hero-item class="text-xs font-bold uppercase tracking-[0.35em] text-white">Kansas City Wedding Planner · Est. 2016</p>
+      <p data-hero-item class="mt-2 max-w-xl font-display text-4xl font-semibold leading-tight text-white sm:text-5xl">Your Kansas City wedding, planned beautifully</p>
+      <p data-hero-item class="mt-2 max-w-lg leading-relaxed text-white/90">Personalized planning + coordination for couples livin' it up in KCMO — from the first hello to the last dance.</p>
+      <a data-hero-item href="/book/" data-magnetic class="mt-5 inline-block rounded-sm bg-gold px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-ink hover:bg-white">Check Availability</a>
+    </div>
     <div class="torn-edge -mt-7 relative" aria-hidden="true"></div>
   </section>
 
@@ -26,7 +56,7 @@ const jsonLd = {
         <Picture name="oval-cake-cutting" alt="Bride and groom cutting their tiered wedding cake" sizes="(max-width: 768px) 224px, 260px" imgClass="aspect-[3/4] w-full rounded-[50%] object-cover shadow-lg shadow-ink/10" />
       </div>
       <div class="reveal text-center">
-        <p class="text-xs font-bold uppercase tracking-[0.35em] text-gold">Kansas City</p>
+        <p class="text-xs font-bold uppercase tracking-[0.35em] text-gold-text">Kansas City</p>
         <h1 data-split class="mt-3 font-display text-4xl font-semibold uppercase leading-tight text-terra sm:text-5xl">
           <span class="font-script normal-case tracking-normal text-terra">unique</span> Wedding Planning + Coordination
         </h1>
@@ -46,9 +76,9 @@ const jsonLd = {
       <div class="reveal">
         <h2 class="font-display text-3xl font-semibold uppercase leading-snug text-terra sm:text-4xl">Personalized wedding planning for couples livin' it up in KCMO</h2>
         <p class="mt-4 leading-relaxed text-ink-soft">Whether you've got it all together and just need a day-of coordinator or feel a little overwhelmed and want help with all the things, we're here to help you celebrate your intimate Kansas City wedding in a big way.</p>
-        <a href="/work-with-us/" data-magnetic class="mt-6 inline-block rounded-sm bg-gold px-7 py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:bg-gold-deep">Let's Create Something Incredible</a>
+        <a href="/work-with-us/" data-magnetic class="mt-6 inline-block rounded-sm bg-gold px-7 py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white">Let's Create Something Incredible</a>
       </div>
-      <div class="reveal grid grid-cols-4 gap-6 text-center">
+      <div class="reveal grid grid-cols-2 gap-6 text-center sm:grid-cols-4">
         {stats.map((s) => (
           <div>
             <p class="font-display text-3xl font-bold text-terra sm:text-4xl"><span data-count={s.value}>0</span>{s.suffix}</p>
@@ -73,7 +103,7 @@ const jsonLd = {
         <p class="mt-8 font-script text-4xl text-white/90">we can help with</p>
         <ul class="mt-4 space-y-3">
           {services.map((s) => (
-            <li><a href={`/services/${s.slug}/`} class="block rounded-sm bg-gold px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:bg-gold-deep">{s.title}</a></li>
+            <li><a href={`/services/${s.slug}/`} class="block rounded-sm bg-gold px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-white">{s.title}</a></li>
           ))}
         </ul>
       </div>
@@ -82,20 +112,25 @@ const jsonLd = {
 
   <!-- Services -->
   <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6" aria-label="Services" data-spy="services">
-    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold">What we do</p>
+    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">What we do</p>
     <h2 class="reveal mt-2 text-center font-display text-4xl font-semibold uppercase text-terra sm:text-5xl">Planning, your way</h2>
     <p class="reveal mx-auto mt-3 max-w-xl text-center leading-relaxed text-ink-soft">Three ways to work with us — from full planning to simply making sure the day itself runs beautifully.</p>
     <div class="mt-10 grid gap-6 md:grid-cols-3">
       {services.map((s) => (
-        <article class="reveal flex flex-col rounded-2xl border border-line bg-white p-7 shadow-sm">
-          <p class="font-display text-lg font-bold text-gold">{s.num}</p>
-          <h3 class="mt-2 font-display text-2xl font-semibold text-terra">{s.title}</h3>
-          <p class="mt-2 flex-1 leading-relaxed text-ink-soft">{s.short}</p>
-          <ul class="mt-4 space-y-2 text-sm text-ink-soft">
-            {s.points.map((p) => (<li class="flex gap-2"><span aria-hidden="true" class="text-gold">✦</span>{p}</li>))}
-          </ul>
-          <p class="mt-5 font-display text-xl font-bold text-terra">{s.price}</p>
-          <a href={`/services/${s.slug}/`} class="mt-3 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-terra transition hover:text-gold-deep">Learn more <span class="card-arrow" aria-hidden="true">→</span></a>
+        <article class="wedding-card reveal flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
+          <a href={`/services/${s.slug}/`} aria-label={`${s.title} — ${s.price}`}>
+            <Picture name={serviceImgs[s.slug]} alt={`${s.title} — Kansas City wedding`} sizes="(max-width: 768px) 100vw, 380px" imgClass="aspect-[16/10] w-full object-cover" />
+          </a>
+          <div class="flex flex-1 flex-col p-7">
+            <p class="font-display text-lg font-bold text-gold-text">{s.num}</p>
+            <h3 class="mt-2 font-display text-2xl font-semibold text-terra"><a href={`/services/${s.slug}/`} class="transition hover:text-gold-deep">{s.title}</a></h3>
+            <p class="mt-2 flex-1 leading-relaxed text-ink-soft">{s.short}</p>
+            <ul class="mt-4 space-y-2 text-sm text-ink-soft">
+              {s.points.map((p) => (<li class="flex gap-2"><span aria-hidden="true" class="text-gold-text">✦</span>{p}</li>))}
+            </ul>
+            <p class="mt-5 font-display text-xl font-bold text-terra">{s.price}</p>
+            <a href={`/services/${s.slug}/`} class="mt-3 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-terra transition hover:text-gold-deep">Learn more <span class="card-arrow" aria-hidden="true">→</span></a>
+          </div>
         </article>
       ))}
     </div>
@@ -104,75 +139,91 @@ const jsonLd = {
   <!-- Process -->
   <section class="bg-cream-2" aria-label="Our process">
     <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold">How it works</p>
+      <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">How it works</p>
       <h2 class="reveal mt-2 text-center font-display text-4xl font-semibold uppercase text-terra sm:text-5xl">From hello to happily ever after</h2>
       <ol class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {processSteps.map((st) => (
-          <li class="reveal rounded-2xl bg-white p-6 shadow-sm">
-            <p class="font-display text-4xl font-bold text-gold/70">{st.num}</p>
-            <h3 class="mt-2 font-display text-2xl font-semibold text-terra">{st.title}</h3>
-            <p class="text-xs font-bold uppercase tracking-wider text-gold">{st.weeks}</p>
-            <p class="mt-2 text-sm leading-relaxed text-ink-soft">{st.short}</p>
+        {processSteps.map((st, i) => (
+          <li class="wedding-card reveal overflow-hidden rounded-2xl bg-white shadow-sm">
+            <a href="/process/" aria-label={`Our process, step ${st.num}: ${st.title}`}>
+              <Picture name={processImgs[i]} alt={`${st.title} — wedding planning step ${st.num}`} sizes="(max-width: 768px) 100vw, 280px" imgClass="aspect-[16/10] w-full object-cover" />
+            </a>
+            <div class="p-6">
+              <p class="font-display text-4xl font-bold text-gold-text/60">{st.num}</p>
+              <h3 class="mt-2 font-display text-2xl font-semibold text-terra"><a href="/process/" class="transition hover:text-gold-deep">{st.title}</a></h3>
+              <p class="text-xs font-bold uppercase tracking-wider text-gold-text">{st.weeks}</p>
+              <p class="mt-2 text-sm leading-relaxed text-ink-soft">{st.short}</p>
+            </div>
           </li>
         ))}
       </ol>
+      <p class="reveal mt-8 text-center"><a href="/process/" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-terra transition hover:text-gold-deep">See the full timeline <span aria-hidden="true">→</span></a></p>
     </div>
   </section>
 
   <!-- Featured weddings -->
   <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6" aria-label="Featured weddings">
-    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold">Real weddings</p>
+    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">Real weddings</p>
     <h2 class="reveal mt-2 text-center font-display text-4xl font-semibold uppercase text-terra sm:text-5xl">Featured weddings</h2>
     <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {weddings.map((w) => (
         <article class="wedding-card reveal overflow-hidden rounded-2xl bg-white shadow-sm">
-          <Picture name={w.img.replace('/images/', '').replace(/-\d+\.jpg$/, '')} alt={`${w.title} — ${w.venue}`} sizes="(max-width: 768px) 100vw, 380px" imgClass="aspect-[4/3] w-full object-cover" />
+          <a href={`/weddings/${w.slug}/`} aria-label={`${w.title} — ${w.venue}`}>
+            <Picture name={w.img.replace('/images/', '').replace(/-\d+\.jpg$/, '')} alt={`${w.title} — ${w.venue}`} sizes="(max-width: 768px) 100vw, 380px" imgClass="aspect-[4/3] w-full object-cover" />
+          </a>
           <div class="p-5">
-            <p class="text-xs font-bold uppercase tracking-wider text-gold">{w.category} · {w.season}</p>
-            <h3 class="mt-1 font-display text-2xl font-semibold text-terra">{w.title}</h3>
+            <p class="text-xs font-bold uppercase tracking-wider text-gold-text">{w.category} · {w.season}</p>
+            <h3 class="mt-1 font-display text-2xl font-semibold text-terra"><a href={`/weddings/${w.slug}/`} class="transition hover:text-gold-deep">{w.title}</a></h3>
             <p class="text-sm text-ink-soft">{w.venue}</p>
             <p class="mt-2 text-sm leading-relaxed text-ink-soft">{w.summary}</p>
+            <a href={`/weddings/${w.slug}/`} class="mt-3 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-terra transition hover:text-gold-deep">See the wedding <span class="card-arrow" aria-hidden="true">→</span></a>
           </div>
         </article>
       ))}
     </div>
+    <p class="reveal mt-8 text-center"><a href="/weddings/" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-terra transition hover:text-gold-deep">See all weddings <span aria-hidden="true">→</span></a></p>
   </section>
 
-  <!-- Testimonials -->
+  <!-- Testimonials — Swiper -->
   <section class="bg-terra text-white" aria-label="Testimonials">
     <div class="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6">
-      <p class="reveal text-xs font-bold uppercase tracking-[0.35em] text-gold">Kind words</p>
+      <p class="reveal text-xs font-bold uppercase tracking-[0.35em] text-white/85">Kind words</p>
       <h2 class="reveal mt-2 font-display text-4xl font-semibold uppercase sm:text-5xl">Couples say it best</h2>
-      <div id="testi-viewport" class="reveal mt-8 overflow-hidden outline-none" tabindex="0" aria-label="Testimonial slider">
-        <div id="testi-track" class="testi-track flex">
+      <div class="swiper testi-swiper reveal mt-8" aria-label="Testimonial slider">
+        <div class="swiper-wrapper">
           {testimonials.map((t) => (
-            <figure data-slide class="w-full shrink-0 px-2">
+            <figure class="swiper-slide px-2">
               <blockquote class="font-display text-2xl font-medium italic leading-snug sm:text-3xl">“{t.quote}”</blockquote>
               <figcaption class="mt-4 text-sm font-bold uppercase tracking-wider">{t.name} <span class="block text-xs font-semibold normal-case tracking-normal text-white/70">{t.detail}</span></figcaption>
             </figure>
           ))}
         </div>
       </div>
-      <div class="mt-6 flex items-center justify-center gap-4">
-        <button id="testi-prev" type="button" aria-label="Previous testimonial" class="grid h-11 w-11 place-items-center rounded-full border border-white/40 transition hover:bg-white hover:text-terra">←</button>
-        <div class="flex gap-2">
-          {testimonials.map((_, i) => (<button type="button" data-dot aria-label={`Go to testimonial ${i + 1}`} class:list={['h-2.5 w-2.5 rounded-full', i === 0 ? 'bg-gold' : 'bg-white/30']} />))}
+      <div class="mt-6 flex items-center justify-center gap-2">
+        <button id="swiper-prev" type="button" aria-label="Previous testimonial" class="grid h-11 w-11 place-items-center rounded-full border border-white/40 transition hover:bg-white hover:text-terra">←</button>
+        <div class="flex gap-1" id="swiper-dots" role="tablist" aria-label="Choose testimonial">
+          {testimonials.map((_, i) => (
+            <button type="button" data-swiper-dot={i} role="tab" aria-label={`Go to testimonial ${i + 1}`} class="grid h-11 w-11 place-items-center">
+              <span class="block h-2.5 w-2.5 rounded-full bg-white/30 transition" aria-hidden="true"></span>
+            </button>
+          ))}
         </div>
-        <button id="testi-next" type="button" aria-label="Next testimonial" class="grid h-11 w-11 place-items-center rounded-full border border-white/40 transition hover:bg-white hover:text-terra">→</button>
+        <button id="swiper-next" type="button" aria-label="Next testimonial" class="grid h-11 w-11 place-items-center rounded-full border border-white/40 transition hover:bg-white hover:text-terra">→</button>
       </div>
     </div>
   </section>
 
   <!-- Team preview -->
   <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6" aria-label="Meet the team">
-    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold">Our team</p>
+    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">Our team</p>
     <h2 class="reveal mt-2 text-center font-display text-4xl font-semibold uppercase text-terra sm:text-5xl">The planners behind the magic</h2>
     <div class="mt-10 grid gap-6 sm:grid-cols-3">
       {team.map((m) => (
-        <article class="reveal text-center">
-          <Picture name={m.img.replace('/images/', '').replace(/-\d+\.jpg$/, '')} alt={m.name} sizes="(max-width: 768px) 100vw, 380px" imgClass="mx-auto aspect-square w-56 rounded-full object-cover shadow-md" />
-          <h3 class="mt-4 font-display text-2xl font-semibold text-terra">{m.name}</h3>
-          <p class="text-xs font-bold uppercase tracking-wider text-gold">{m.role}</p>
+        <article class="wedding-card reveal text-center">
+          <a href="/our-team/" aria-label={`${m.name}, ${m.role} — meet the team`}>
+            <Picture name={m.img.replace('/images/', '').replace(/-\d+\.jpg$/, '')} alt={m.name} sizes="(max-width: 768px) 100vw, 380px" imgClass="mx-auto aspect-square w-56 rounded-full object-cover shadow-md" />
+          </a>
+          <h3 class="mt-4 font-display text-2xl font-semibold text-terra"><a href="/our-team/" class="transition hover:text-gold-deep">{m.name}</a></h3>
+          <p class="text-xs font-bold uppercase tracking-wider text-gold-text">{m.role}</p>
           <p class="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-ink-soft">{m.bio}</p>
         </article>
       ))}
@@ -183,14 +234,14 @@ const jsonLd = {
   <!-- Blog preview -->
   <section class="bg-cream-2" aria-label="From the blog">
     <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold">The blog</p>
+      <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">The blog</p>
       <h2 class="reveal mt-2 text-center font-display text-4xl font-semibold uppercase text-terra sm:text-5xl">Planning notes + real weddings</h2>
       <div class="mt-10 grid gap-6 md:grid-cols-3">
         {blogPosts.map((p) => (
           <article class="wedding-card reveal overflow-hidden rounded-2xl bg-white shadow-sm">
             <a href={`/blog/${p.slug}/`}><Picture name={p.img.replace('/images/', '').replace(/-\d+\.jpg$/, '')} alt={p.title} sizes="(max-width: 768px) 100vw, 380px" imgClass="aspect-[16/10] w-full object-cover" /></a>
             <div class="p-5">
-              <p class="text-xs font-bold uppercase tracking-wider text-gold">{p.category} · {p.readingTime}</p>
+              <p class="text-xs font-bold uppercase tracking-wider text-gold-text">{p.category} · {p.readingTime}</p>
               <h3 class="mt-1 font-display text-xl font-semibold leading-snug text-terra"><a href={`/blog/${p.slug}/`} class="transition hover:text-gold-deep">{p.title}</a></h3>
               <p class="mt-2 text-sm leading-relaxed text-ink-soft">{p.excerpt}</p>
             </div>
@@ -202,13 +253,13 @@ const jsonLd = {
 
   <!-- FAQ preview -->
   <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6" aria-label="Frequently asked questions">
-    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold">Good to know</p>
+    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">Good to know</p>
     <h2 class="reveal mt-2 text-center font-display text-4xl font-semibold uppercase text-terra sm:text-5xl">Questions, answered</h2>
     <div class="mt-8 space-y-3">
       {faqs.slice(0, 4).map((f, i) => (
         <div class="reveal rounded-2xl border border-line bg-white">
           <button type="button" data-faq-btn aria-expanded={i === 0 ? 'true' : 'false'} class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-lg font-semibold text-terra">
-            {f.q}<span class="faq-icon shrink-0 text-2xl font-light text-gold" aria-hidden="true">+</span>
+            {f.q}<span class="faq-icon shrink-0 text-2xl font-light text-gold-text" aria-hidden="true">+</span>
           </button>
           <div class="faq-panel" data-open={i === 0 ? 'true' : 'false'}><div><p class="px-5 pb-5 text-sm leading-relaxed text-ink-soft">{f.a}</p></div></div>
         </div>
@@ -221,7 +272,40 @@ const jsonLd = {
   <section class="bg-terra px-4 py-16 text-center text-white sm:px-6" aria-label="Get started">
     <p class="reveal font-script text-5xl">let's make it lovely</p>
     <h2 class="reveal mt-3 font-display text-4xl font-semibold uppercase sm:text-5xl">Ready to plan your Kansas City wedding?</h2>
-    <p class="reveal mx-auto mt-3 max-w-xl text-white/85">Tell us your date and your dream — we'll take it from there. Booking 2026 weddings now.</p>
-    <a href="/work-with-us/" data-magnetic class="reveal mt-7 inline-block rounded-sm bg-gold px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:bg-gold-deep">Work With Us</a>
+    <p class="reveal mx-auto mt-3 max-w-xl text-white/85">Tell us your date and your dream — we'll take it from there. Booking {site.bookingYear} weddings now.</p>
+    <a href="/book/" data-magnetic class="reveal mt-7 inline-block rounded-sm bg-gold px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-ink hover:bg-white">Book a Free Consultation</a>
   </section>
+  <StickyBar />
 </Layout>
+<script>
+  import Swiper from 'swiper';
+  import { Navigation, Autoplay, A11y } from 'swiper/modules';
+  import 'swiper/css';
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dots = [...document.querySelectorAll<HTMLButtonElement>('[data-swiper-dot]')];
+  const swiper = new Swiper('.testi-swiper', {
+    modules: [Navigation, Autoplay, A11y],
+    loop: true,
+    slidesPerView: 1,
+    spaceBetween: 16,
+    autoplay: reduced ? false : { delay: 6000, pauseOnMouseEnter: true, disableOnInteraction: false },
+    navigation: { prevEl: '#swiper-prev', nextEl: '#swiper-next' },
+    a11y: { enabled: true },
+    on: {
+      slideChange(sw) {
+        dots.forEach((d, i) => {
+          const dot = d.querySelector('span');
+          const active = i === sw.realIndex;
+          dot?.classList.toggle('bg-gold', active);
+          dot?.classList.toggle('bg-white/30', !active);
+          d.setAttribute('aria-selected', String(active));
+        });
+      },
+    },
+  });
+  dots.forEach((d, i) => {
+    if (i === 0) d.querySelector('span')?.classList.replace('bg-white/30', 'bg-gold');
+    d.addEventListener('click', () => swiper.slideToLoop(i));
+  });
+</script>

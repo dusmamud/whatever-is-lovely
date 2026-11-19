@@ -1,0 +1,439 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Picture from '../../components/Picture.astro';
+import StickyBar from '../../components/StickyBar.astro';
+import { services, testimonials, site } from '../../data/site';
+
+const times = ['9:00 AM', '10:30 AM', '12:00 PM', '2:00 PM', '3:30 PM', '5:00 PM'];
+const stepLabels = ['Service', 'Date & time', 'Your details', 'Confirmed'];
+---
+<Layout
+  title="Book a Free Consultation — Whatever is Lovely | Kansas City Wedding Planning"
+  description="Book your free wedding planning consultation in Kansas City — pick a package, choose a date and time, and we'll reply within one business day."
+  ogImage="https://whatever-is-lovely.pages.dev/images/venue-garden-1200.jpg"
+>
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">Book Your Date</p>
+    <h1 data-split class="mt-2 text-center font-display text-5xl font-semibold uppercase text-terra sm:text-6xl">Book a free consultation</h1>
+    <p class="reveal mx-auto mt-4 max-w-xl text-center leading-relaxed text-ink-soft">Four quick steps — no obligation, no pressure. We reply within one business day with honest availability for your date. Booking {site.bookingYear} weddings now.</p>
+
+    <!-- Progress -->
+    <ol class="mt-10 flex items-center gap-1 sm:gap-2" aria-label="Booking progress">
+      {stepLabels.map((label, i) => (
+        <li class="flex-1" data-step-pill={i + 1}>
+          <div class="flex flex-col items-center gap-1.5">
+            <span class="grid h-10 w-10 place-items-center rounded-full border-2 font-display text-lg font-bold transition" data-step-dot={i + 1}>{i + 1}</span>
+            <span class="text-center text-[11px] font-bold uppercase tracking-wider">{label}</span>
+          </div>
+          <div class="mt-2 h-1 rounded-full bg-line" data-step-bar={i + 1}></div>
+        </li>
+      ))}
+    </ol>
+    <p id="book-announce" class="sr-only" aria-live="polite"></p>
+
+    <div class="mt-8 rounded-2xl border border-line bg-white p-6 shadow-sm sm:p-8">
+      <!-- STEP 1 — service -->
+      <div data-step-panel="1">
+        <h2 class="font-display text-3xl font-semibold text-terra">Which package fits?</h2>
+        <p class="mt-1 text-sm text-ink-soft">Not sure yet? Pick your best guess — we'll talk it through on the call.</p>
+        <div class="mt-6 space-y-3" role="radiogroup" aria-label="Choose a service">
+          {services.map((s) => (
+            <label class="flex cursor-pointer items-start gap-4 rounded-2xl border border-line p-5 transition hover:border-terra has-checked:border-terra has-checked:bg-cream">
+              <input type="radio" name="bk-service" value={s.title} data-service-slug={s.slug} class="mt-1 h-5 w-5 shrink-0 accent-[#9a5a38]" />
+              <span>
+                <span class="block font-display text-2xl font-semibold text-terra">{s.title} <span class="text-lg text-gold-text">{s.price}</span></span>
+                <span class="mt-1 block text-sm leading-relaxed text-ink-soft">{s.short}</span>
+              </span>
+            </label>
+          ))}
+          <label class="flex cursor-pointer items-start gap-4 rounded-2xl border border-line p-5 transition hover:border-terra has-checked:border-terra has-checked:bg-cream">
+            <input type="radio" name="bk-service" value="Not sure yet" class="mt-1 h-5 w-5 shrink-0 accent-[#9a5a38]" />
+            <span>
+              <span class="block font-display text-2xl font-semibold text-terra">Not sure yet</span>
+              <span class="mt-1 block text-sm leading-relaxed text-ink-soft">We'll help you figure it out — that's what the call is for.</span>
+            </span>
+          </label>
+        </div>
+        <p id="bk-service-error" class="field-error invisible text-red-700" role="alert"></p>
+        <div class="mt-6 flex justify-end">
+          <button type="button" data-next="1" class="min-h-[48px] rounded-sm bg-gold px-8 py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white">Continue</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 — date + time -->
+      <div data-step-panel="2" class="hidden">
+        <h2 class="font-display text-3xl font-semibold text-terra">Pick a date &amp; time</h2>
+        <p class="mt-1 text-sm text-ink-soft">Consultations are 20 minutes, on video or in person in Kansas City. All times are Central Time (CT).</p>
+        <p id="bk-soonest" class="mt-4 rounded-xl bg-cream-2 px-4 py-3 text-sm font-semibold text-terra"></p>
+        <div class="mt-6 grid gap-6 sm:grid-cols-2">
+          <div>
+            <label for="bk-date" class="text-sm font-bold text-terra">Consultation date *</label>
+            <input id="bk-date" type="date" required aria-describedby="bk-date-error" class="mt-1 w-full rounded-xl border border-line bg-cream px-4 py-3 outline-none focus:border-terra" />
+            <p id="bk-date-error" class="field-error invisible text-red-700" role="alert"></p>
+            <p class="mt-1 text-xs text-ink-soft/70">Sundays are fine too — we meet seven days a week.</p>
+          </div>
+          <div>
+            <span id="bk-time-label" class="text-sm font-bold text-terra">Time (CT) *</span>
+            <div class="mt-1 grid grid-cols-2 gap-2" role="radiogroup" aria-labelledby="bk-time-label">
+              {times.map((t) => (
+                <button type="button" data-time={t} aria-pressed="false" class="min-h-[48px] rounded-xl border border-line bg-cream px-3 py-2.5 text-sm font-bold text-terra transition hover:border-terra aria-pressed:bg-terra aria-pressed:text-white">{t}</button>
+              ))}
+            </div>
+            <p id="bk-time-error" class="field-error invisible text-red-700" role="alert"></p>
+          </div>
+        </div>
+        <figure class="mt-6 rounded-2xl bg-cream-2 p-5">
+          <p class="text-sm font-bold uppercase tracking-wider text-gold-text">Rated 4.9 out of 5 · 312 couples</p>
+          <blockquote class="mt-2 font-display text-xl italic leading-snug text-terra">“{testimonials[0].quote}”</blockquote>
+          <figcaption class="mt-2 text-sm font-bold text-terra">{testimonials[0].name} · {testimonials[0].detail}</figcaption>
+        </figure>
+        <div class="mt-6 flex justify-between gap-3">
+          <button type="button" data-back="2" class="min-h-[48px] rounded-sm border border-terra px-6 py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-terra transition hover:bg-terra hover:text-white">← Back</button>
+          <button type="button" data-next="2" class="min-h-[48px] rounded-sm bg-gold px-8 py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white">Continue</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 — details -->
+      <div data-step-panel="3" class="hidden">
+        <h2 class="font-display text-3xl font-semibold text-terra">Your details</h2>
+        <p class="mt-1 text-sm text-ink-soft">Just the essentials — we'll confirm everything on the call.</p>
+        <form id="bk-form" novalidate class="mt-6 space-y-5">
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="bk-names" class="text-sm font-bold text-terra">Your names *</label>
+              <input id="bk-names" type="text" autocomplete="name" required placeholder="Emma & James" aria-describedby="bk-names-error" class="mt-1 w-full rounded-xl border border-line bg-cream px-4 py-3 outline-none placeholder:text-ink-soft/50 focus:border-terra" />
+              <p id="bk-names-error" class="field-error invisible text-red-700" role="alert"></p>
+            </div>
+            <div>
+              <label for="bk-email" class="text-sm font-bold text-terra">Email *</label>
+              <input id="bk-email" type="email" autocomplete="email" required placeholder="you@example.com" aria-describedby="bk-email-error" class="mt-1 w-full rounded-xl border border-line bg-cream px-4 py-3 outline-none placeholder:text-ink-soft/50 focus:border-terra" />
+              <p id="bk-email-error" class="field-error invisible text-red-700" role="alert"></p>
+            </div>
+          </div>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="bk-phone" class="text-sm font-bold text-terra">Phone <span class="font-normal text-ink-soft/70">(optional)</span></label>
+              <input id="bk-phone" type="tel" autocomplete="tel" placeholder="(816) 555-0100" class="mt-1 w-full rounded-xl border border-line bg-cream px-4 py-3 outline-none placeholder:text-ink-soft/50 focus:border-terra" />
+            </div>
+            <div>
+              <label for="bk-guests" class="text-sm font-bold text-terra">Guest count <span class="font-normal text-ink-soft/70">(optional)</span></label>
+              <input id="bk-guests" type="number" min="1" max="500" inputmode="numeric" placeholder="e.g. 120" class="mt-1 w-full rounded-xl border border-line bg-cream px-4 py-3 outline-none placeholder:text-ink-soft/50 focus:border-terra" />
+            </div>
+          </div>
+          <div>
+            <label for="bk-notes" class="text-sm font-bold text-terra">Anything we should know? <span class="font-normal text-ink-soft/70">(optional)</span></label>
+            <textarea id="bk-notes" rows="3" placeholder="Venue, style, worries — whatever's on your mind…" class="mt-1 w-full rounded-xl border border-line bg-cream px-4 py-3 outline-none placeholder:text-ink-soft/50 focus:border-terra"></textarea>
+          </div>
+          <p id="bk-summary" class="rounded-xl bg-cream-2 px-4 py-3 text-sm font-semibold text-terra"></p>
+        </form>
+        <div class="mt-6 flex justify-between gap-3">
+          <button type="button" data-back="3" class="min-h-[48px] rounded-sm border border-terra px-6 py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-terra transition hover:bg-terra hover:text-white">← Back</button>
+          <button type="button" data-next="3" class="min-h-[48px] rounded-sm bg-gold px-8 py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white">Confirm booking</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 — confirmation -->
+      <div data-step-panel="4" class="hidden" aria-live="polite">
+        <p class="font-script text-5xl text-terra">you're booked in!</p>
+        <h2 class="mt-2 font-display text-3xl font-semibold uppercase text-terra">Consultation confirmed</h2>
+        <p class="mt-3 text-sm leading-relaxed text-ink-soft">Thank you — your consultation request is saved in this browser. Your reference code is <strong id="bk-ref" class="text-terra">WL-······</strong>. Keep it handy when you talk to us.</p>
+        <dl class="mt-5 space-y-2 rounded-2xl bg-cream-2 p-5 text-sm">
+          <div class="flex gap-3"><dt class="w-24 shrink-0 font-bold uppercase tracking-wider text-gold-text">Service</dt><dd id="bk-confirm-service" class="font-semibold text-terra"></dd></div>
+          <div class="flex gap-3"><dt class="w-24 shrink-0 font-bold uppercase tracking-wider text-gold-text">When</dt><dd id="bk-confirm-when" class="font-semibold text-terra"></dd></div>
+          <div class="flex gap-3"><dt class="w-24 shrink-0 font-bold uppercase tracking-wider text-gold-text">Who</dt><dd id="bk-confirm-who" class="font-semibold text-terra"></dd></div>
+        </dl>
+        <h3 class="mt-6 font-display text-2xl font-semibold text-terra">What happens next</h3>
+        <ol class="mt-2 list-decimal space-y-1 pl-5 text-sm leading-relaxed text-ink-soft">
+          <li>We reply within one business day to confirm your time (or suggest the nearest alternative).</li>
+          <li>On the call we hear your story, talk packages and honest availability, and answer every question.</li>
+          <li>If we're a fit, a 30% deposit reserves your date — no obligation until then.</li>
+        </ol>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a id="bk-gcal" href="#" target="_blank" rel="noopener" class="min-h-[48px] rounded-sm bg-terra px-6 py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:bg-terra-deep">Add to Google Calendar</a>
+          <button id="bk-ics" type="button" class="min-h-[48px] rounded-sm border border-terra px-6 py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-terra transition hover:bg-terra hover:text-white">Download .ICS file</button>
+        </div>
+        <div class="mt-6 flex justify-between gap-3">
+          <button type="button" data-back="4" class="min-h-[48px] rounded-sm border border-terra px-6 py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-terra transition hover:bg-terra hover:text-white">← Back</button>
+          <button type="button" data-reset class="min-h-[48px] rounded-sm bg-gold px-6 py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white">Book another consultation</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- My bookings (localStorage) -->
+    <div id="bk-my-bookings" class="mt-8 hidden rounded-2xl border border-line bg-white p-6 shadow-sm">
+      <h2 class="font-display text-2xl font-semibold text-terra">My bookings</h2>
+      <p class="mt-1 text-sm text-ink-soft">Saved in this browser only — nothing was emailed.</p>
+      <ul id="bk-my-list" class="mt-4 space-y-3"></ul>
+    </div>
+
+    <div class="reveal mt-10 grid gap-4 sm:grid-cols-3">
+      <Picture name="venue-garden" alt="Garden venue with floral arch" sizes="(max-width: 768px) 100vw, 360px" imgClass="aspect-[4/3] w-full rounded-2xl object-cover shadow-md" />
+      <Picture name="decor-florals" alt="Blush rose wedding florals" sizes="(max-width: 768px) 100vw, 360px" imgClass="aspect-[4/3] w-full rounded-2xl object-cover shadow-md" />
+      <Picture name="reception-candles" alt="Candlelit wedding reception" sizes="(max-width: 768px) 100vw, 360px" imgClass="aspect-[4/3] w-full rounded-2xl object-cover shadow-md" />
+    </div>
+  </section>
+  <StickyBar />
+</Layout>
+<script>
+  import { animate } from 'motion';
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const panels = [...document.querySelectorAll<HTMLElement>('[data-step-panel]')];
+  const announce = document.getElementById('book-announce');
+  const labels = ['Service', 'Date & time', 'Your details', 'Confirmed'];
+  let step = 1;
+  let selectedTime: string | null = null;
+  let lastBooking: { ref: string; service: string; date: string; time: string; names: string; email: string } | null = null;
+
+  const $ = (id: string) => document.getElementById(id) as HTMLInputElement | null;
+  const errEl = (id: string) => document.getElementById(id);
+  const setErr = (id: string, msg: string) => {
+    const e = errEl(id);
+    if (e) { e.textContent = msg; e.classList.remove('invisible'); }
+  };
+  const clearErr = (id: string) => {
+    const e = errEl(id);
+    if (e) { e.textContent = ''; e.classList.add('invisible'); }
+  };
+
+  // --- Step 2: date min=today at runtime; soonest-available slot ---
+  const dateInput = $('bk-date');
+  const today = new Date();
+  const todayIso = today.toLocaleDateString('en-CA');
+  if (dateInput) dateInput.min = todayIso;
+  const slotMinutes = [9 * 60, 10 * 60 + 30, 12 * 60, 14 * 60, 15 * 60 + 30, 17 * 60];
+  const slotLabels = ['9:00 AM', '10:30 AM', '12:00 PM', '2:00 PM', '3:30 PM', '5:00 PM'];
+  const fmtDate = (d: Date) => d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
+  const soonestEl = document.getElementById('bk-soonest');
+  let soonest: { date: Date; time: string } | null = null;
+  {
+    const nowMin = today.getHours() * 60 + today.getMinutes() + 120;
+    const idx = slotMinutes.findIndex((m) => m >= nowMin);
+    if (idx >= 0) soonest = { date: new Date(today), time: slotLabels[idx] };
+    else { const t = new Date(today); t.setDate(t.getDate() + 1); soonest = { date: t, time: slotLabels[0] }; }
+    if (soonestEl && soonest) {
+      soonestEl.innerHTML = `Soonest available: <strong>${fmtDate(soonest.date)} at ${soonest.time} CT</strong> — <button type="button" id="bk-take-soonest" class="underline decoration-terra underline-offset-2 hover:text-gold-deep">take this slot</button>`;
+      document.getElementById('bk-take-soonest')?.addEventListener('click', () => {
+        if (!soonest || !dateInput) return;
+        dateInput.value = soonest.date.toLocaleDateString('en-CA');
+        pickTime(soonest.time);
+        clearErr('bk-date-error'); clearErr('bk-time-error');
+      });
+    }
+  }
+
+  // --- Time picker ---
+  const timeBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-time]')];
+  const pickTime = (t: string) => {
+    selectedTime = t;
+    timeBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.time === t)));
+    clearErr('bk-time-error');
+  };
+  timeBtns.forEach((b) => b.addEventListener('click', () => pickTime(b.dataset.time ?? '')));
+
+  // --- Step navigation (motion step transitions, transform+opacity only) ---
+  const showStep = (n: number) => {
+    step = n;
+    panels.forEach((p) => p.classList.toggle('hidden', Number(p.dataset.stepPanel) !== n));
+    const panel = panels.find((p) => Number(p.dataset.stepPanel) === n);
+    if (panel && !reduced) animate(panel, { opacity: [0, 1], y: [14, 0] }, { duration: 0.25, ease: 'easeOut' });
+    document.querySelectorAll('[data-step-dot]').forEach((d) => {
+      const i = Number((d as HTMLElement).dataset.stepDot);
+      d.classList.toggle('bg-terra', i <= n);
+      d.classList.toggle('text-white', i <= n);
+      d.classList.toggle('border-terra', i <= n);
+      d.classList.toggle('border-line', i > n);
+      d.classList.toggle('text-terra', i > n);
+    });
+    document.querySelectorAll('[data-step-bar]').forEach((b) => {
+      const i = Number((b as HTMLElement).dataset.stepBar);
+      b.classList.toggle('bg-terra', i <= n);
+      b.classList.toggle('bg-line', i > n);
+    });
+    if (announce) announce.textContent = `Step ${n} of 4: ${labels[n - 1]}`;
+    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+  };
+
+  const service = () => (document.querySelector<HTMLInputElement>('input[name="bk-service"]:checked')?.value ?? '');
+  const validStep1 = () => {
+    if (!service()) { setErr('bk-service-error', 'Please choose a service — or “Not sure yet”.'); return false; }
+    clearErr('bk-service-error'); return true;
+  };
+  const validStep2 = () => {
+    let ok = true;
+    if (!dateInput?.value) { setErr('bk-date-error', 'Please pick a date.'); ok = false; }
+    else if (dateInput.value < todayIso) { setErr('bk-date-error', 'That date is in the past — please pick a future date.'); ok = false; }
+    else clearErr('bk-date-error');
+    if (!selectedTime) { setErr('bk-time-error', 'Please pick a time.'); ok = false; }
+    else clearErr('bk-time-error');
+    return ok;
+  };
+  const validStep3 = () => {
+    let ok = true;
+    const names = $('bk-names'), email = $('bk-email');
+    if (!names || names.value.trim().length < 2) { setErr('bk-names-error', 'Please enter your names.'); ok = false; } else clearErr('bk-names-error');
+    if (!email || !emailRe.test(email.value.trim())) { setErr('bk-email-error', 'Please enter a valid email address.'); ok = false; } else clearErr('bk-email-error');
+    return ok;
+  };
+
+  const updateSummary = () => {
+    const el = document.getElementById('bk-summary');
+    if (!el) return;
+    const nice = dateInput?.value ? fmtDate(new Date(`${dateInput.value}T12:00:00`)) : '—';
+    el.textContent = `${service()} · ${nice} at ${selectedTime ?? '—'} CT`;
+  };
+
+  const to24 = (t: string) => {
+    const m = t.match(/(\d+):(\d+) (AM|PM)/);
+    if (!m) return '090000';
+    let h = Number(m[1]);
+    if (m[3] === 'PM' && h !== 12) h += 12;
+    if (m[3] === 'AM' && h === 12) h = 0;
+    return `${String(h).padStart(2, '0')}${m[2]}00`;
+  };
+
+  const confirm = () => {
+    const ref = 'WL-' + Array.from({ length: 6 }, () => 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 31)]).join('');
+    const booking = {
+      ref,
+      service: service(),
+      date: dateInput?.value ?? '',
+      time: selectedTime ?? '',
+      names: $('bk-names')?.value.trim() ?? '',
+      email: $('bk-email')?.value.trim() ?? '',
+      phone: $('bk-phone')?.value.trim() ?? '',
+      guests: $('bk-guests')?.value.trim() ?? '',
+      notes: $('bk-notes')?.value.trim() ?? '',
+      createdAt: new Date().toISOString(),
+    };
+    lastBooking = booking;
+    try {
+      const prev = JSON.parse(localStorage.getItem('wil-bookings') ?? '[]') as unknown[];
+      prev.push(booking);
+      localStorage.setItem('wil-bookings', JSON.stringify(prev));
+    } catch { /* private mode — on-screen confirmation still shows */ }
+    const refEl = document.getElementById('bk-ref');
+    if (refEl) refEl.textContent = ref;
+    const nice = booking.date ? fmtDate(new Date(`${booking.date}T12:00:00`)) : '—';
+    const when = document.getElementById('bk-confirm-when');
+    if (when) when.textContent = `${nice} at ${booking.time} CT`;
+    const svc = document.getElementById('bk-confirm-service');
+    if (svc) svc.textContent = booking.service;
+    const who = document.getElementById('bk-confirm-who');
+    if (who) who.textContent = `${booking.names} · ${booking.email}`;
+    // Google Calendar template link
+    const d = booking.date.replaceAll('-', '');
+    const start = `${d}T${to24(booking.time)}`;
+    const endMin = to24(booking.time);
+    const endH = Number(endMin.slice(0, 2)) + 1;
+    const end = `${d}T${String(endH).padStart(2, '0')}${endMin.slice(2)}`;
+    const gcal = document.getElementById('bk-gcal') as HTMLAnchorElement | null;
+    if (gcal) {
+      const q = new URLSearchParams({
+        action: 'TEMPLATE',
+        text: `Wedding planning consultation — Whatever is Lovely (${booking.ref})`,
+        dates: `${start}/${end}`,
+        details: `Free consultation with Whatever is Lovely. Service: ${booking.service}. Reference ${booking.ref}.`,
+        location: 'Kansas City, MO',
+      });
+      gcal.href = `https://calendar.google.com/calendar/render?${q.toString()}`;
+    }
+    renderMyBookings();
+    showStep(4);
+  };
+
+  // --- My bookings list + Rebook ---
+  const renderMyBookings = () => {
+    let list: { ref: string; service: string; date: string; time: string; names: string }[] = [];
+    try { list = JSON.parse(localStorage.getItem('wil-bookings') ?? '[]'); } catch { list = []; }
+    const wrap = document.getElementById('bk-my-bookings');
+    const ul = document.getElementById('bk-my-list');
+    if (!wrap || !ul) return;
+    if (!list.length) { wrap.classList.add('hidden'); return; }
+    wrap.classList.remove('hidden');
+    ul.innerHTML = '';
+    [...list].reverse().forEach((b) => {
+      const li = document.createElement('li');
+      li.className = 'flex flex-wrap items-center justify-between gap-3 rounded-xl bg-cream-2 px-4 py-3 text-sm';
+      const nice = b.date ? fmtDate(new Date(`${b.date}T12:00:00`)) : '—';
+      li.innerHTML = `<span><strong class="text-terra">${b.ref}</strong> · ${b.service}<br /><span class="text-ink-soft">${nice} at ${b.time} CT · ${b.names}</span></span>`;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'min-h-[44px] rounded-full border border-terra px-4 py-2 text-xs font-bold uppercase tracking-wider text-terra transition hover:bg-terra hover:text-white';
+      btn.textContent = 'Rebook';
+      btn.addEventListener('click', () => {
+        const radio = document.querySelector<HTMLInputElement>(`input[name="bk-service"][value="${CSS.escape(b.service)}"]`);
+        if (radio) radio.checked = true;
+        selectedTime = null;
+        timeBtns.forEach((tb) => tb.setAttribute('aria-pressed', 'false'));
+        if (dateInput) dateInput.value = '';
+        showStep(2);
+      });
+      li.appendChild(btn);
+      ul.appendChild(li);
+    });
+  };
+
+  // --- ICS download ---
+  document.getElementById('bk-ics')?.addEventListener('click', () => {
+    if (!lastBooking) return;
+    const d = lastBooking.date.replaceAll('-', '');
+    const start = `${d}T${to24(lastBooking.time)}`;
+    const end = `${d}T${String(Number(to24(lastBooking.time).slice(0, 2)) + 1).padStart(2, '0')}${to24(lastBooking.time).slice(2)}`;
+    const ics = [
+      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Whatever is Lovely//Consultation//EN',
+      'BEGIN:VEVENT',
+      `UID:${lastBooking.ref}@whateverislovely`,
+      `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}`,
+      `DTSTART;TZID=America/Chicago:${start}`,
+      `DTEND;TZID=America/Chicago:${end}`,
+      `SUMMARY:Wedding planning consultation — Whatever is Lovely (${lastBooking.ref})`,
+      `DESCRIPTION:Free consultation. Service: ${lastBooking.service}. Reference ${lastBooking.ref}.`,
+      'LOCATION:Kansas City\\, MO',
+      'END:VEVENT', 'END:VCALENDAR',
+    ].join('\r\n');
+    const blob = new Blob([ics], { type: 'text/calendar' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'whatever-is-lovely-consultation.ics';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  // --- Wire buttons ---
+  document.querySelectorAll('[data-next]').forEach((b) => b.addEventListener('click', () => {
+    const from = Number((b as HTMLElement).dataset.next);
+    if (from === 1 && !validStep1()) return;
+    if (from === 2 && !validStep2()) return;
+    if (from === 3) { if (!validStep3()) return; confirm(); return; }
+    if (from === 2) updateSummary();
+    showStep(from + 1);
+  }));
+  document.querySelectorAll('[data-back]').forEach((b) => b.addEventListener('click', () => {
+    const from = Number((b as HTMLElement).dataset.back);
+    showStep(Math.max(1, from - 1));
+  }));
+  document.querySelector('[data-reset]')?.addEventListener('click', () => {
+    document.querySelectorAll<HTMLInputElement>('input[name="bk-service"]').forEach((r) => { r.checked = false; });
+    if (dateInput) dateInput.value = '';
+    selectedTime = null;
+    timeBtns.forEach((tb) => tb.setAttribute('aria-pressed', 'false'));
+    (document.getElementById('bk-form') as HTMLFormElement | null)?.reset();
+    lastBooking = null;
+    showStep(1);
+  });
+
+  // --- Prefill from ?service= (slug or title) ---
+  {
+    const q = new URLSearchParams(window.location.search).get('service');
+    if (q) {
+      const radio = document.querySelector<HTMLInputElement>(`input[name="bk-service"][data-service-slug="${CSS.escape(q)}"]`)
+        ?? document.querySelector<HTMLInputElement>(`input[name="bk-service"][value="${CSS.escape(q)}"]`);
+      if (radio) radio.checked = true;
+    }
+  }
+
+  renderMyBookings();
+  showStep(1);
+</script>

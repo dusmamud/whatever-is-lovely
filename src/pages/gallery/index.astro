@@ -1,0 +1,106 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Picture from '../../components/Picture.astro';
+import StickyBar from '../../components/StickyBar.astro';
+import { galleryItems } from '../../data/site';
+const pic = (img: string) => img.replace('/images/', '').replace(/-\d+\.jpg$/, '');
+const styles = ['All', 'Garden', 'Classic', 'Rustic', 'Modern'];
+const venues = ['All', ...Array.from(new Set(galleryItems.map((g) => g.venue)))];
+const seasons = ['All', 'Spring', 'Summer', 'Fall', 'Winter'];
+---
+<Layout
+  title="Gallery — Whatever is Lovely | Kansas City Wedding Photos"
+  description="A gallery of real Kansas City weddings — garden, classic, rustic and modern celebrations. Filter by style, venue or season."
+  ogImage="https://whatever-is-lovely.pages.dev/images/couple-sunset-1200.jpg"
+>
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">Gallery</p>
+    <h1 data-split class="mt-2 text-center font-display text-5xl font-semibold uppercase text-terra sm:text-6xl">Moments we're proud of</h1>
+    <p class="reveal mx-auto mt-4 max-w-2xl text-center leading-relaxed text-ink-soft">Tap any photo to see it full-screen. Use the filters to find the style, venue or season you're dreaming of.</p>
+
+    <div class="reveal mt-10 space-y-3">
+      <div class="flex flex-wrap items-center justify-center gap-2" role="group" aria-label="Filter by style">
+        <span class="w-full text-center text-xs font-bold uppercase tracking-wider text-gold-text sm:w-auto sm:text-left">Style</span>
+        {styles.map((s) => (
+          <button type="button" data-filter-group="style" data-filter={s.toLowerCase()} aria-pressed={s === 'All' ? 'true' : 'false'} class:list={['min-h-[44px] rounded-full border px-4 py-2.5 text-sm font-bold uppercase tracking-wider transition', s === 'All' ? 'border-terra bg-terra text-white' : 'border-line bg-white text-terra hover:border-terra']}>{s}</button>
+        ))}
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-2" role="group" aria-label="Filter by venue">
+        <span class="w-full text-center text-xs font-bold uppercase tracking-wider text-gold-text sm:w-auto sm:text-left">Venue</span>
+        {venues.map((v) => (
+          <button type="button" data-filter-group="venue" data-filter={v} aria-pressed={v === 'All' ? 'true' : 'false'} class:list={['min-h-[44px] rounded-full border px-4 py-2.5 text-sm font-bold uppercase tracking-wider transition', v === 'All' ? 'border-terra bg-terra text-white' : 'border-line bg-white text-terra hover:border-terra']}>{v === 'All' ? 'All venues' : v.replace('The ', '')}</button>
+        ))}
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-2" role="group" aria-label="Filter by season">
+        <span class="w-full text-center text-xs font-bold uppercase tracking-wider text-gold-text sm:w-auto sm:text-left">Season</span>
+        {seasons.map((s) => (
+          <button type="button" data-filter-group="season" data-filter={s} aria-pressed={s === 'All' ? 'true' : 'false'} class:list={['min-h-[44px] rounded-full border px-4 py-2.5 text-sm font-bold uppercase tracking-wider transition', s === 'All' ? 'border-terra bg-terra text-white' : 'border-line bg-white text-terra hover:border-terra']}>{s}</button>
+        ))}
+      </div>
+    </div>
+    <p id="gallery-count" class="mt-4 text-center text-sm font-semibold text-ink-soft" aria-live="polite">{galleryItems.length} photos</p>
+
+    <div id="gallery-grid" class="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-3">
+      {galleryItems.map((g, i) => (
+        <figure class="wedding-card reveal overflow-hidden rounded-2xl bg-white shadow-sm" data-style={g.style} data-venue={g.venue} data-season={g.season}>
+          <a href={`/images/${pic(g.img)}-1200.jpg`} data-fancybox="gallery" data-caption={`${g.alt} — ${g.venue}, ${g.season}`} aria-label={`Open photo ${i + 1}: ${g.alt}`}>
+            <Picture name={pic(g.img)} alt={g.alt} sizes="(max-width: 768px) 50vw, 380px" imgClass="aspect-[4/3] w-full object-cover" />
+          </a>
+          <figcaption class="p-3 text-xs leading-relaxed text-ink-soft"><span class="font-bold uppercase tracking-wider text-gold-text">{g.style}</span> · {g.venue} · {g.season}</figcaption>
+        </figure>
+      ))}
+    </div>
+    <p id="gallery-empty" class="mt-8 hidden text-center text-ink-soft">No photos match those filters — try a different combination.</p>
+    <div class="reveal mt-12 text-center">
+      <p class="font-script text-5xl text-terra">see your wedding here one day?</p>
+      <a href="/book/" class="mt-5 inline-block rounded-sm bg-gold px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white">Book a Free Consultation</a>
+    </div>
+  </section>
+  <StickyBar />
+</Layout>
+<script>
+  import { Fancybox } from '@fancyapps/ui';
+  import '@fancyapps/ui/dist/fancybox/fancybox.css';
+
+  // Keyboard-accessible lightbox: Fancybox handles arrows, Escape, focus
+  // trapping and focus return out of the box.
+  Fancybox.bind('[data-fancybox="gallery"]', {
+    Toolbar: { display: { left: [], middle: [], right: ['close'] } },
+    Thumbs: false,
+    Carousel: { infinite: true },
+  });
+
+  const filters: Record<string, string> = { style: 'all', venue: 'All', season: 'All' };
+  const items = [...document.querySelectorAll<HTMLElement>('#gallery-grid figure')];
+  const count = document.getElementById('gallery-count');
+  const empty = document.getElementById('gallery-empty');
+  const apply = () => {
+    let shown = 0;
+    items.forEach((it) => {
+      const ok =
+        (filters.style === 'all' || it.dataset.style === filters.style) &&
+        (filters.venue === 'All' || it.dataset.venue === filters.venue) &&
+        (filters.season === 'All' || it.dataset.season === filters.season);
+      it.classList.toggle('hidden', !ok);
+      if (ok) shown += 1;
+    });
+    if (count) count.textContent = shown === 1 ? '1 photo' : `${shown} photos`;
+    empty?.classList.toggle('hidden', shown > 0);
+  };
+  document.querySelectorAll<HTMLButtonElement>('[data-filter-group]').forEach((b) => {
+    b.addEventListener('click', () => {
+      const group = b.dataset.filterGroup ?? 'style';
+      filters[group] = b.dataset.filter ?? 'all';
+      document.querySelectorAll<HTMLButtonElement>(`[data-filter-group="${group}"]`).forEach((sib) => {
+        const active = sib === b;
+        sib.setAttribute('aria-pressed', String(active));
+        sib.classList.toggle('border-terra', active);
+        sib.classList.toggle('bg-terra', active);
+        sib.classList.toggle('text-white', active);
+        sib.classList.toggle('bg-white', !active);
+        sib.classList.toggle('text-terra', !active);
+      });
+      apply();
+    });
+  });
+</script>

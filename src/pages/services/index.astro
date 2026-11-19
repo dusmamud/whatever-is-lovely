@@ -5,20 +5,20 @@ import { services, testimonials } from '../../data/site';
 ---
 <Layout title="Services — Whatever is Lovely | Kansas City Wedding Planning">
   <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold">Services</p>
+    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">Services</p>
     <h1 data-split class="mt-2 text-center font-display text-5xl font-semibold uppercase text-terra sm:text-6xl">Planning, your way</h1>
     <p class="reveal mx-auto mt-4 max-w-xl text-center leading-relaxed text-ink-soft">Whether you want us beside you for every decision or just on the day itself, there is a package that fits. Every price is fixed in writing before we start.</p>
     <div class="mt-12 grid gap-6 md:grid-cols-3">
       {services.map((s) => (
         <article class="reveal flex flex-col rounded-2xl border border-line bg-white p-7 shadow-sm">
-          <p class="font-display text-lg font-bold text-gold">{s.num}</p>
+          <p class="font-display text-lg font-bold text-gold-text">{s.num}</p>
           <h2 class="mt-2 font-display text-2xl font-semibold text-terra">{s.title}</h2>
           <p class="mt-2 flex-1 leading-relaxed text-ink-soft">{s.short}</p>
           <ul class="mt-4 space-y-2 text-sm text-ink-soft">
-            {s.points.map((p) => (<li class="flex gap-2"><span aria-hidden="true" class="text-gold">✦</span>{p}</li>))}
+            {s.points.map((p) => (<li class="flex gap-2"><span aria-hidden="true" class="text-gold-text">✦</span>{p}</li>))}
           </ul>
           <p class="mt-5 font-display text-xl font-bold text-terra">{s.price}</p>
-          <a href={`/services/${s.slug}/`} class="mt-4 inline-block rounded-sm bg-gold px-6 py-3 text-center text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:bg-gold-deep">View {s.title}</a>
+          <a href={`/services/${s.slug}/`} class="mt-4 inline-block rounded-sm bg-gold px-6 py-3 text-center text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white">View {s.title}</a>
         </article>
       ))}
     </div>
@@ -28,12 +28,12 @@ import { services, testimonials } from '../../data/site';
         <p class="font-script text-4xl">not sure which fits?</p>
         <h2 class="mt-2 font-display text-3xl font-semibold uppercase">Let's talk it through</h2>
         <p class="mt-3 leading-relaxed text-white/85">A free 20-minute call is all it takes. Tell us where you are in planning, and we'll honestly tell you which package — if any — you need.</p>
-        <a href="/work-with-us/" class="mt-5 inline-block self-start rounded-sm bg-gold px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:bg-gold-deep">Book a Free Call</a>
+        <a href="/work-with-us/" class="mt-5 inline-block self-start rounded-sm bg-gold px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white">Book a Free Call</a>
       </div>
     </div>
     <div class="reveal mt-12 text-center">
       <blockquote class="mx-auto max-w-2xl font-display text-2xl italic leading-snug text-terra">“{testimonials[0].quote}”</blockquote>
-      <p class="mt-3 text-sm font-bold uppercase tracking-wider text-gold">{testimonials[0].name}</p>
+      <p class="mt-3 text-sm font-bold uppercase tracking-wider text-gold-text">{testimonials[0].name}</p>
     </div>
   </section>
 </Layout>

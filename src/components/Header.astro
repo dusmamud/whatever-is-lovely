@@ -2,10 +2,12 @@
 import { site } from '../data/site';
 const current = Astro.url.pathname;
 const leftLinks = [
-  { href: '/our-team/', label: 'Our Team' },
+  { href: '/weddings/', label: 'Weddings' },
   { href: '/services/', label: 'Services' },
+  { href: '/our-team/', label: 'Our Team' },
 ];
 const rightLinks = [
+  { href: '/pricing/', label: 'Pricing' },
   { href: '/blog/', label: 'The Blog' },
   { href: '/work-with-us/', label: 'Work With Us' },
 ];
@@ -13,6 +15,13 @@ const allLinks = [
   { href: '/', label: 'Home' },
   ...leftLinks,
   ...rightLinks,
+  { href: '/gallery/', label: 'Gallery' },
+  { href: '/reviews/', label: 'Reviews' },
+  { href: '/vendors/', label: 'Vendors' },
+  { href: '/about/', label: 'About' },
+  { href: '/process/', label: 'Process' },
+  { href: '/contact/', label: 'Contact' },
+  { href: '/book/', label: 'Book a Consultation' },
   { href: '/faq/', label: 'FAQ' },
 ];
 ---
@@ -23,17 +32,17 @@ const allLinks = [
   <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6" aria-label="Main navigation">
     <ul class="hidden items-center gap-8 text-[13px] font-semibold uppercase tracking-[0.14em] text-terra md:flex">
       {leftLinks.map((l) => (
-        <li><a href={l.href} class:list={['transition hover:text-gold-deep', { 'text-gold-deep': current === l.href || current.startsWith(l.href) }]}>{l.label}</a></li>
+        <li><a href={l.href} class:list={['transition hover:text-gold-text', { 'text-gold-text': current === l.href || current.startsWith(l.href) }]}>{l.label}</a></li>
       ))}
     </ul>
     <a href="/" class="text-center leading-none" aria-label="Whatever is Lovely — home">
       <span class="block font-display text-[26px] font-semibold uppercase leading-none tracking-[0.08em] text-terra sm:text-[30px]">Whatever</span>
       <span class="my-0.5 block"><span class="font-script text-xl leading-none text-terra">is</span> <span class="font-display text-[26px] font-semibold uppercase leading-none tracking-[0.08em] text-terra sm:text-[30px]">Lovely</span></span>
-      <span class="block text-[9px] font-semibold uppercase tracking-[0.42em] text-gold">Weddings + Events</span>
+      <span class="block text-[9px] font-semibold uppercase tracking-[0.42em] text-gold-text">Weddings + Events</span>
     </a>
     <ul class="hidden items-center gap-8 text-[13px] font-semibold uppercase tracking-[0.14em] text-terra md:flex">
       {rightLinks.map((l) => (
-        <li><a href={l.href} class:list={['transition hover:text-gold-deep', { 'text-gold-deep': current === l.href || current.startsWith(l.href) }]}>{l.label}</a></li>
+        <li><a href={l.href} class:list={['transition hover:text-gold-text', { 'text-gold-text': current === l.href || current.startsWith(l.href) }]}>{l.label}</a></li>
       ))}
     </ul>
     <button id="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" class="grid h-11 w-11 place-items-center rounded-full text-terra hover:bg-terra/10 md:hidden">
@@ -50,18 +59,45 @@ const allLinks = [
   </div>
   <ul class="mt-12 space-y-2">
     {allLinks.map((l) => (
-      <li><a href={l.href} class="block rounded-2xl px-3 py-3 font-display text-3xl font-semibold text-terra transition hover:bg-terra/5 hover:text-gold-deep">{l.label}</a></li>
+      <li><a href={l.href} class="block rounded-2xl px-3 py-3 font-display text-3xl font-semibold text-terra transition hover:bg-terra/5 hover:text-gold-text">{l.label}</a></li>
     ))}
   </ul>
-  <a href="/work-with-us/" class="mt-auto rounded-full bg-gold px-6 py-4 text-center text-sm font-bold uppercase tracking-widest text-white">Let's Create Something Incredible</a>
+  <a href="/book/" class="mt-auto rounded-full bg-gold px-6 py-4 text-center text-sm font-bold uppercase tracking-widest text-ink transition hover:bg-terra hover:text-white">Let's Create Something Incredible</a>
 </div>
 <script>
   const btn = document.getElementById('menu-btn');
   const menu = document.getElementById('mobile-menu');
   const close = document.getElementById('menu-close');
-  const open = () => { menu?.classList.remove('hidden'); menu?.classList.add('flex'); document.body.style.overflow = 'hidden'; btn?.setAttribute('aria-expanded', 'true'); };
-  const shut = () => { menu?.classList.add('hidden'); menu?.classList.remove('flex'); document.body.style.overflow = ''; btn?.setAttribute('aria-expanded', 'false'); };
+  const open = () => {
+    menu?.classList.remove('hidden'); menu?.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    btn?.setAttribute('aria-expanded', 'true');
+    btn?.setAttribute('aria-label', 'Close menu');
+    // Move focus inside the menu so keyboard users land on the close button.
+    close?.focus();
+  };
+  const shut = () => {
+    menu?.classList.add('hidden'); menu?.classList.remove('flex');
+    document.body.style.overflow = '';
+    btn?.setAttribute('aria-expanded', 'false');
+    btn?.setAttribute('aria-label', 'Open menu');
+    // Return focus to the hamburger that opened the menu.
+    btn?.focus();
+  };
+  const isOpen = () => menu && !menu.classList.contains('hidden');
   btn?.addEventListener('click', open);
   close?.addEventListener('click', shut);
   menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', shut));
+  // Escape closes the menu; Tab is trapped inside while it is open.
+  document.addEventListener('keydown', (e) => {
+    if (!isOpen()) return;
+    if (e.key === 'Escape') { e.preventDefault(); shut(); return; }
+    if (e.key !== 'Tab' || !menu) return;
+    const focusables = [...menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')].filter((el) => el.offsetParent !== null);
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
 </script>

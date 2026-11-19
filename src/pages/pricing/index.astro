@@ -1,0 +1,160 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Picture from '../../components/Picture.astro';
+import StickyBar from '../../components/StickyBar.astro';
+import { pricingPackages, site } from '../../data/site';
+const basePrice = (p: string) => Number(p.replace(/[^0-9]/g, ''));
+const addOnPrice = (p: string) => Number(p.replace(/[^0-9]/g, ''));
+---
+<Layout
+  title="Pricing & Investment — Whatever is Lovely | Kansas City Wedding Planning"
+  description="Wedding planning pricing in Kansas City — full service from $6,500, partial from $3,200, day-of coordination from $1,850. Compare packages and estimate your investment."
+  ogImage="https://whatever-is-lovely.pages.dev/images/venue-garden-1200.jpg"
+>
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">Investment</p>
+    <h1 data-split class="mt-2 text-center font-display text-5xl font-semibold uppercase text-terra sm:text-6xl">Honest pricing, fixed in writing</h1>
+    <p class="reveal mx-auto mt-4 max-w-2xl text-center leading-relaxed text-ink-soft">Three packages, one promise: every quote is fixed in writing before we start — no hidden charges later. A 30% deposit reserves your date; the balance is due in two instalments (half at the halfway point, the rest two weeks before the wedding).</p>
+
+    <!-- Comparison table -->
+    <div class="reveal mt-12 overflow-x-auto rounded-2xl border border-line bg-white shadow-sm">
+      <table class="w-full min-w-[720px] border-collapse text-left">
+        <caption class="sr-only">Compare our three wedding planning packages</caption>
+        <thead>
+          <tr class="border-b border-line bg-cream-2">
+            <th scope="col" class="px-5 py-4 font-display text-xl font-semibold text-terra">What's included</th>
+            {pricingPackages.map((p) => (
+              <th scope="col" class="px-5 py-4">
+                <span class="block font-display text-xl font-semibold text-terra">{p.title}</span>
+                <span class="mt-1 block text-sm font-bold text-gold-text">{p.price}</span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-line">
+            <th scope="row" class="px-5 py-4 text-sm font-bold uppercase tracking-wider text-terra">Best for</th>
+            {pricingPackages.map((p) => (<td class="px-5 py-4 text-sm leading-relaxed text-ink-soft">{p.bestFor}</td>))}
+          </tr>
+          {pricingPackages[0].includes.map((_, i) => (
+            <tr class="border-b border-line align-top">
+              <th scope="row" class="px-5 py-4 text-sm font-semibold text-terra">Included {i + 1}</th>
+              {pricingPackages.map((p) => (<td class="px-5 py-4 text-sm leading-relaxed text-ink-soft">{p.includes[i] ?? '—'}</td>))}
+            </tr>
+          ))}
+          <tr class="align-top">
+            <th scope="row" class="px-5 py-4 text-sm font-bold uppercase tracking-wider text-terra">Not included</th>
+            {pricingPackages.map((p) => (
+              <td class="px-5 py-4 text-sm leading-relaxed text-ink-soft">
+                <ul class="space-y-1">{p.notIncluded.map((n) => (<li>✕ {n}</li>))}</ul>
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Package cards with add-ons -->
+    <div class="mt-10 grid gap-6 lg:grid-cols-3">
+      {pricingPackages.map((p) => (
+        <article class="reveal flex flex-col rounded-2xl border border-line bg-white p-7 shadow-sm">
+          <h2 class="font-display text-2xl font-semibold text-terra">{p.title}</h2>
+          <p class="mt-1 font-display text-3xl font-bold text-terra">{p.price}</p>
+          <p class="mt-2 text-sm leading-relaxed text-ink-soft">{p.bestFor}</p>
+          <h3 class="mt-5 text-xs font-bold uppercase tracking-wider text-gold-text">Add-ons</h3>
+          <ul class="mt-2 space-y-2 text-sm text-ink-soft">
+            {p.addOns.map((a) => (<li class="flex justify-between gap-3"><span>{a.name}</span><span class="font-bold text-terra">{a.price}</span></li>))}
+          </ul>
+          <a href={`/book/?service=${p.slug}`} class="mt-auto inline-block rounded-sm bg-gold px-6 py-3.5 pt-3.5 text-center text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white" style="margin-top: 1.5rem;">Book {p.title}</a>
+        </article>
+      ))}
+    </div>
+    <p class="reveal mt-6 text-center text-sm text-ink-soft">Prices are starting prices for Kansas City weddings; travel outside the KC metro is quoted separately. Every price above is a mock starting point for the demo — your written quote is what counts.</p>
+
+    <!-- Budget calculator -->
+    <div class="reveal mt-14 rounded-2xl bg-terra p-8 text-white sm:p-10">
+      <h2 class="font-display text-3xl font-semibold uppercase sm:text-4xl">Estimate your investment</h2>
+      <p class="mt-2 max-w-2xl text-sm leading-relaxed text-white/85">A mock estimate — play with the numbers, then book a free consultation for a real, written quote.</p>
+      <div class="mt-8 grid gap-8 md:grid-cols-2">
+        <div class="space-y-6">
+          <fieldset>
+            <legend class="text-sm font-bold uppercase tracking-wider">Package</legend>
+            <div class="mt-2 space-y-2">
+              {pricingPackages.map((p, i) => (
+                <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-white/30 px-4 py-3 transition hover:border-white has-checked:border-white has-checked:bg-white/10">
+                  <input type="radio" name="calc-package" value={p.slug} checked={i === 0} data-base={basePrice(p.price)} class="h-5 w-5 accent-[#b9973f]" />
+                  <span class="font-semibold">{p.title} <span class="text-white/70">· {p.price}</span></span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <div>
+            <label for="calc-guests" class="flex justify-between text-sm font-bold uppercase tracking-wider"><span>Guest count</span><span id="calc-guests-out" class="text-white">120 guests</span></label>
+            <input id="calc-guests" type="range" min="20" max="300" step="10" value="120" class="mt-2 w-full accent-[#b9973f]" />
+            <div class="flex justify-between text-xs text-white/70"><span>20</span><span>300</span></div>
+          </div>
+          <fieldset>
+            <legend class="text-sm font-bold uppercase tracking-wider">Add-ons</legend>
+            <div id="calc-addons" class="mt-2 space-y-2"></div>
+          </fieldset>
+        </div>
+        <div class="flex flex-col justify-center rounded-2xl bg-white/10 p-6">
+          <p class="text-sm font-bold uppercase tracking-wider text-white/85">Estimated planning investment</p>
+          <p class="mt-2 font-display text-5xl font-bold"><span id="calc-low">$0</span> – <span id="calc-high">$0</span></p>
+          <p id="calc-breakdown" class="mt-3 text-sm leading-relaxed text-white/85"></p>
+          <p class="mt-3 text-xs text-white/70">Mock estimate only — venue, catering and vendor fees are separate. Your written quote after a consultation is the real number.</p>
+          <a href="/book/" class="mt-5 inline-block self-start rounded-sm bg-gold px-7 py-3.5 text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-white">Get my written quote</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal mt-12 grid gap-4 sm:grid-cols-2">
+      <Picture name="decor-florals" alt="Blush rose wedding florals" sizes="(max-width: 768px) 100vw, 560px" imgClass="aspect-[4/3] w-full rounded-2xl object-cover shadow-md" />
+      <Picture name="reception-candles" alt="Candlelit wedding reception" sizes="(max-width: 768px) 100vw, 560px" imgClass="aspect-[4/3] w-full rounded-2xl object-cover shadow-md" />
+    </div>
+  </section>
+  <StickyBar />
+</Layout>
+<script define:vars={{ packages: pricingPackages }}>
+  const addOnWrap = document.getElementById('calc-addons');
+  const guestsInput = document.getElementById('calc-guests');
+  const guestsOut = document.getElementById('calc-guests-out');
+  const lowEl = document.getElementById('calc-low');
+  const highEl = document.getElementById('calc-high');
+  const breakdownEl = document.getElementById('calc-breakdown');
+  const money = (n) => '$' + Math.round(n).toLocaleString('en-US');
+
+  const renderAddOns = () => {
+    if (!addOnWrap) return;
+    const pkg = packages.find((p) => p.slug === document.querySelector('input[name="calc-package"]:checked')?.value) ?? packages[0];
+    addOnWrap.innerHTML = '';
+    pkg.addOns.forEach((a) => {
+      const label = document.createElement('label');
+      label.className = 'flex cursor-pointer items-center gap-3 rounded-xl border border-white/30 px-4 py-3 transition hover:border-white has-checked:border-white has-checked:bg-white/10';
+      label.innerHTML = `<input type="checkbox" data-price="${a.price.replace(/[^0-9]/g, '')}" class="h-5 w-5 accent-[#b9973f]" /><span class="font-semibold">${a.name} <span class="text-white/70">· ${a.price}</span></span>`;
+      label.querySelector('input')?.addEventListener('change', calc);
+      addOnWrap.appendChild(label);
+    });
+  };
+
+  const calc = () => {
+    const base = Number(document.querySelector('input[name="calc-package"]:checked')?.dataset.base ?? 6500);
+    const guests = Number(guestsInput?.value ?? 120);
+    if (guestsOut) guestsOut.textContent = `${guests} guests`;
+    let addOns = 0;
+    addOnWrap?.querySelectorAll('input:checked').forEach((c) => { addOns += Number(c.dataset.price ?? 0); });
+    // Mock model: larger weddings need more coordination hours.
+    const guestCost = guests * 12;
+    const est = base + guestCost + addOns;
+    const low = est;
+    const high = Math.round(est * 1.2);
+    if (lowEl) lowEl.textContent = money(low);
+    if (highEl) highEl.textContent = money(high);
+    if (breakdownEl) breakdownEl.textContent = `Package ${money(base)} + guest coordination ${money(guestCost)} (${guests} guests) + add-ons ${money(addOns)}. Range allows for extra planning hours and travel.`;
+  };
+
+  document.querySelectorAll('input[name="calc-package"]').forEach((r) => r.addEventListener('change', () => { renderAddOns(); calc(); }));
+  guestsInput?.addEventListener('input', calc);
+  renderAddOns();
+  calc();
+</script>

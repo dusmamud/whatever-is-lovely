@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://whatever-is-lovely.pages.dev/sitemap-index.xml

@@ -1,0 +1,134 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Picture from '../../components/Picture.astro';
+import StickyBar from '../../components/StickyBar.astro';
+import { weddings, services, testimonials, site } from '../../data/site';
+
+export function getStaticPaths() {
+  return weddings.map((w) => ({ params: { slug: w.slug } }));
+}
+const { slug } = Astro.params;
+const wedding = weddings.find((w) => w.slug === slug)!;
+// Distinct photo set per wedding — hero first, then two supporting shots.
+const photoSets: Record<string, { name: string; alt: string }[]> = {
+  'emma-james-garden': [
+    { name: 'venue-garden', alt: 'Garden venue with floral arch and golden-hour lawns' },
+    { name: 'garden-couple', alt: 'Emma and James embracing under the floral arch' },
+    { name: 'decor-florals', alt: 'Blush rose table florals at the reception' },
+  ],
+  'sophia-liam-river': [
+    { name: 'couple-exit', alt: 'Sophia and Liam leaving the ceremony under confetti' },
+    { name: 'reception-candles', alt: 'Candlelit reception tables at the River Market Hall' },
+    { name: 'bridal-party', alt: 'The bridal party celebrating after the ceremony' },
+  ],
+  'ava-noah-barn': [
+    { name: 'venue-barn', alt: 'The barn venue at Timber Ridge at dusk' },
+    { name: 'lights-reception', alt: 'String lights glowing over the barn reception' },
+    { name: 'couple-sunset', alt: 'Ava and Noah at sunset outside the barn' },
+  ],
+  'mia-ethan-downtown': [
+    { name: 'venue-loft', alt: 'The Downtown Loft with big windows and exposed brick' },
+    { name: 'table-setting', alt: 'Gold and cream table setting with candles' },
+    { name: 'oval-cake-cutting', alt: 'Mia and Ethan cutting their cake together' },
+  ],
+  'isabella-lucas-estate': [
+    { name: 'couple-portrait-2', alt: 'Isabella and Lucas sharing a first look' },
+    { name: 'bride-detail', alt: 'Isabella holding her bouquet close-up' },
+    { name: 'hero-couple', alt: 'Isabella and Lucas at golden hour on the estate lawn' },
+  ],
+  'harper-owen-vineyard': [
+    { name: 'cake-table', alt: 'Flower-topped wedding cake on the dessert table' },
+    { name: 'couple-sunset', alt: 'Harper and Owen among the vines at sunset' },
+    { name: 'venue-barn', alt: 'The vineyard barn glowing at dusk' },
+  ],
+};
+const photos = photoSets[wedding.slug] ?? [{ name: 'garden-couple', alt: wedding.title }];
+const service = services.find((s) => s.title === wedding.serviceUsed);
+const quote = testimonials.find((t) => t.name === wedding.title);
+const others = weddings.filter((w) => w.slug !== wedding.slug).slice(0, 3);
+---
+<Layout
+  title={`${wedding.title} — ${wedding.venue} | Whatever is Lovely`}
+  description={`${wedding.title} at ${wedding.venue} (${wedding.season}) — a ${wedding.category.toLowerCase()} Kansas City wedding planned with ${wedding.serviceUsed}.`}
+  ogImage={`${site.url}${wedding.img}`}
+  ogType="article"
+>
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">Real Wedding · {wedding.category} · {wedding.season}</p>
+    <h1 data-split class="mt-2 text-center font-display text-5xl font-semibold uppercase text-terra sm:text-6xl">{wedding.title}</h1>
+    <p class="reveal mt-3 text-center text-lg text-ink-soft">{wedding.venue} · {wedding.date}</p>
+
+    <div class="reveal mt-8">
+      <Picture name={photos[0].name} alt={photos[0].alt} eager sizes="(max-width: 768px) 100vw, 1152px" imgClass="aspect-[16/9] w-full rounded-2xl object-cover shadow-md" />
+    </div>
+
+    <div class="mt-10 grid gap-10 md:grid-cols-[1fr_320px]">
+      <div>
+        <h2 class="font-display text-3xl font-semibold text-terra">Their story</h2>
+        <p class="mt-3 leading-relaxed text-ink-soft">{wedding.story}</p>
+        {quote && (
+          <figure class="mt-8 rounded-2xl bg-cream-2 p-6">
+            <blockquote class="font-display text-2xl italic leading-snug text-terra">“{quote.quote}”</blockquote>
+            <figcaption class="mt-3 text-sm font-bold uppercase tracking-wider text-gold-text">{quote.name} · {quote.detail}</figcaption>
+          </figure>
+        )}
+        <h2 class="mt-10 font-display text-3xl font-semibold text-terra">The details</h2>
+        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+          <div class="rounded-2xl border border-line bg-white p-5 shadow-sm">
+            <p class="text-xs font-bold uppercase tracking-wider text-gold-text">Venue</p>
+            <p class="mt-1 font-semibold text-terra">{wedding.venue}</p>
+          </div>
+          <div class="rounded-2xl border border-line bg-white p-5 shadow-sm">
+            <p class="text-xs font-bold uppercase tracking-wider text-gold-text">Style</p>
+            <p class="mt-1 font-semibold text-terra">{wedding.category} · {wedding.season}</p>
+          </div>
+          <div class="rounded-2xl border border-line bg-white p-5 shadow-sm">
+            <p class="text-xs font-bold uppercase tracking-wider text-gold-text">Service used</p>
+            <p class="mt-1 font-semibold text-terra">{service ? <a href={`/services/${service.slug}/`} class="underline transition hover:text-gold-deep">{wedding.serviceUsed}</a> : wedding.serviceUsed}</p>
+          </div>
+          <div class="rounded-2xl border border-line bg-white p-5 shadow-sm">
+            <p class="text-xs font-bold uppercase tracking-wider text-gold-text">Wedding date</p>
+            <p class="mt-1 font-semibold text-terra">{wedding.date}</p>
+          </div>
+        </div>
+        <div class="mt-8 grid gap-4 sm:grid-cols-2">
+          {photos.slice(1).map((p) => (
+            <Picture name={p.name} alt={p.alt} sizes="(max-width: 768px) 100vw, 560px" imgClass="aspect-[4/3] w-full rounded-2xl object-cover shadow-md" />
+          ))}
+        </div>
+      </div>
+      <aside>
+        <div class="rounded-2xl border border-line bg-white p-6 shadow-sm md:sticky md:top-24">
+          <h2 class="font-display text-2xl font-semibold text-terra">Vendor credits</h2>
+          <p class="mt-1 text-sm text-ink-soft">The talented Kansas City vendors behind this day.</p>
+          <ul class="mt-4 space-y-2 text-sm text-ink-soft">
+            {wedding.vendorCredits.map((v) => (<li class="flex gap-2"><span aria-hidden="true" class="text-gold-text">✦</span>{v}</li>))}
+          </ul>
+          <a href="/vendors/" class="mt-5 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-terra transition hover:text-gold-deep">See our preferred vendors <span aria-hidden="true">→</span></a>
+          <hr class="my-6 border-line" />
+          <p class="font-script text-4xl text-terra">dreaming of your own?</p>
+          <p class="mt-2 text-sm leading-relaxed text-ink-soft">Tell us your date and your dream — booking {site.bookingYear} weddings now.</p>
+          <a href="/book/" class="mt-4 block rounded-sm bg-gold px-6 py-3.5 text-center text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-terra hover:text-white">Check Your Date</a>
+        </div>
+      </aside>
+    </div>
+
+    <h2 class="reveal mt-16 text-center font-display text-3xl font-semibold uppercase text-terra">More real weddings</h2>
+    <div class="mt-6 grid gap-6 sm:grid-cols-3">
+      {others.map((w) => (
+        <article class="wedding-card reveal overflow-hidden rounded-2xl bg-white shadow-sm">
+          <a href={`/weddings/${w.slug}/`} aria-label={`${w.title} — ${w.venue}`}>
+            <Picture name={w.img.replace('/images/', '').replace(/-\d+\.jpg$/, '')} alt={`${w.title} — ${w.venue}`} sizes="(max-width: 768px) 100vw, 380px" imgClass="aspect-[4/3] w-full object-cover" />
+          </a>
+          <div class="p-5">
+            <p class="text-xs font-bold uppercase tracking-wider text-gold-text">{w.category} · {w.season}</p>
+            <h3 class="mt-1 font-display text-2xl font-semibold text-terra"><a href={`/weddings/${w.slug}/`} class="transition hover:text-gold-deep">{w.title}</a></h3>
+            <p class="text-sm text-ink-soft">{w.venue}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+    <p class="mt-8 text-center"><a href="/weddings/" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-terra transition hover:text-gold-deep">See all weddings <span aria-hidden="true">→</span></a></p>
+  </section>
+  <StickyBar />
+</Layout>
