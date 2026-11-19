@@ -1,0 +1,67 @@
+---
+import { site } from '../data/site';
+const current = Astro.url.pathname;
+const leftLinks = [
+  { href: '/our-team/', label: 'Our Team' },
+  { href: '/services/', label: 'Services' },
+];
+const rightLinks = [
+  { href: '/blog/', label: 'The Blog' },
+  { href: '/work-with-us/', label: 'Work With Us' },
+];
+const allLinks = [
+  { href: '/', label: 'Home' },
+  ...leftLinks,
+  ...rightLinks,
+  { href: '/faq/', label: 'FAQ' },
+];
+---
+<div class="bg-terra-deep py-2 text-center text-[11px] font-semibold uppercase tracking-[0.28em] text-white/90">
+  Booking {site.bookingYear} Weddings
+</div>
+<header id="site-header" class="sticky top-0 z-50 bg-cream/95 shadow-sm shadow-ink/5 backdrop-blur">
+  <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6" aria-label="Main navigation">
+    <ul class="hidden items-center gap-8 text-[13px] font-semibold uppercase tracking-[0.14em] text-terra md:flex">
+      {leftLinks.map((l) => (
+        <li><a href={l.href} class:list={['transition hover:text-gold-deep', { 'text-gold-deep': current === l.href || current.startsWith(l.href) }]}>{l.label}</a></li>
+      ))}
+    </ul>
+    <a href="/" class="text-center leading-none" aria-label="Whatever is Lovely — home">
+      <span class="block font-display text-[26px] font-semibold uppercase leading-none tracking-[0.08em] text-terra sm:text-[30px]">Whatever</span>
+      <span class="my-0.5 block"><span class="font-script text-xl leading-none text-terra">is</span> <span class="font-display text-[26px] font-semibold uppercase leading-none tracking-[0.08em] text-terra sm:text-[30px]">Lovely</span></span>
+      <span class="block text-[9px] font-semibold uppercase tracking-[0.42em] text-gold">Weddings + Events</span>
+    </a>
+    <ul class="hidden items-center gap-8 text-[13px] font-semibold uppercase tracking-[0.14em] text-terra md:flex">
+      {rightLinks.map((l) => (
+        <li><a href={l.href} class:list={['transition hover:text-gold-deep', { 'text-gold-deep': current === l.href || current.startsWith(l.href) }]}>{l.label}</a></li>
+      ))}
+    </ul>
+    <button id="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" class="grid h-11 w-11 place-items-center rounded-full text-terra hover:bg-terra/10 md:hidden">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+    </button>
+  </nav>
+</header>
+<div id="mobile-menu" class="fixed inset-0 z-[90] hidden flex-col overflow-y-auto bg-cream px-6 pb-10 pt-5" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="flex items-center justify-between">
+    <span class="font-display text-xl font-semibold uppercase tracking-wide text-terra">Whatever is Lovely</span>
+    <button id="menu-close" type="button" aria-label="Close menu" class="grid h-11 w-11 place-items-center rounded-full text-terra hover:bg-terra/10">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+  </div>
+  <ul class="mt-12 space-y-2">
+    {allLinks.map((l) => (
+      <li><a href={l.href} class="block rounded-2xl px-3 py-3 font-display text-3xl font-semibold text-terra transition hover:bg-terra/5 hover:text-gold-deep">{l.label}</a></li>
+    ))}
+  </ul>
+  <a href="/work-with-us/" class="mt-auto rounded-full bg-gold px-6 py-4 text-center text-sm font-bold uppercase tracking-widest text-white">Let's Create Something Incredible</a>
+</div>
+<script>
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const close = document.getElementById('menu-close');
+  const open = () => { menu?.classList.remove('hidden'); menu?.classList.add('flex'); document.body.style.overflow = 'hidden'; btn?.setAttribute('aria-expanded', 'true'); };
+  const shut = () => { menu?.classList.add('hidden'); menu?.classList.remove('flex'); document.body.style.overflow = ''; btn?.setAttribute('aria-expanded', 'false'); };
+  btn?.addEventListener('click', open);
+  close?.addEventListener('click', shut);
+  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', shut));
+</script>

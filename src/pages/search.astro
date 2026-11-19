@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from '../data/site';
+const q = Astro.url.searchParams.get('q') ?? '';
+---
+<Layout title="Search — Whatever is Lovely" robots="noindex">
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+    <p class="text-center text-xs font-bold uppercase tracking-[0.35em] text-gold">Search</p>
+    <h1 class="mt-2 text-center font-display text-5xl font-semibold uppercase text-terra">Search the site</h1>
+    <form method="get" action="/search/" class="mx-auto mt-8 flex max-w-xl overflow-hidden rounded-full border border-line bg-white shadow-sm">
+      <label class="sr-only" for="search-q">Search</label>
+      <input id="search-q" name="q" type="search" value={q} placeholder="Try “day-of coordination”…" class="w-full bg-transparent px-5 py-3.5 outline-none placeholder:text-ink-soft/50" />
+      <button type="submit" class="shrink-0 bg-gold px-6 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-gold-deep">Search</button>
+    </form>
+    {q && (
+      <div class="mt-8">
+        <p class="text-center text-ink-soft">Results for “<strong class="text-terra">{q}</strong>” — this is a demo search page. Try one of these instead:</p>
+        <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+          <li><a href="/services/" class="block rounded-2xl border border-line bg-white p-5 font-display text-xl font-semibold text-terra transition hover:border-gold">Services</a></li>
+          <li><a href="/blog/" class="block rounded-2xl border border-line bg-white p-5 font-display text-xl font-semibold text-terra transition hover:border-gold">The Blog</a></li>
+          <li><a href="/faq/" class="block rounded-2xl border border-line bg-white p-5 font-display text-xl font-semibold text-terra transition hover:border-gold">FAQ</a></li>
+          <li><a href="/work-with-us/" class="block rounded-2xl border border-line bg-white p-5 font-display text-xl font-semibold text-terra transition hover:border-gold">Work With Us</a></li>
+        </ul>
+      </div>
+    )}
+    <p class="mt-8 text-center text-xs text-ink-soft/70">© {site.year} Whatever is Lovely · Kansas City, MO</p>
+  </section>
+</Layout>

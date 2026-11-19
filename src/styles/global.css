@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-script: "Great Vibes", cursive;
+  --color-terra: #9a5a38;
+  --color-terra-deep: #8a4b2d;
+  --color-terra-dark: #6e3a22;
+  --color-gold: #b9973f;
+  --color-gold-deep: #a8842f;
+  --color-cream: #fdf8f1;
+  --color-cream-2: #faf3ea;
+  --color-ink: #4a2c1e;
+  --color-ink-soft: #6b4a38;
+  --color-line: rgba(74, 44, 30, 0.16);
+}
+
+@font-face { font-family: "Cormorant Garamond"; src: url("/fonts/cormorant-garamond-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Cormorant Garamond"; src: url("/fonts/cormorant-garamond-600.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Cormorant Garamond"; src: url("/fonts/cormorant-garamond-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Great Vibes"; src: url("/fonts/great-vibes-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/fonts/inter-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/fonts/inter-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/fonts/inter-600.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/fonts/inter-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+
+html { scroll-behavior: smooth; }
+html, body { overflow-x: clip; }
+body { background: #fdf8f1; color: #4a2c1e; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+::selection { background: #b9973f; color: #fff; }
+.font-display { font-family: var(--font-display); }
+.font-script { font-family: var(--font-script); }
+
+/* Torn-paper edge under the hero: soft white scallop via radial mask */
+.torn-edge {
+  height: 28px;
+  background: #fdf8f1;
+  -webkit-mask-image: radial-gradient(circle at 10px -6px, transparent 14px, #000 15px);
+  -webkit-mask-size: 28px 28px;
+  mask-image: radial-gradient(circle at 10px -6px, transparent 14px, #000 15px);
+  mask-size: 28px 28px;
+}
+
+/* Reveal-on-scroll: visible by default; GSAP from() hides only when JS runs */
+.reveal { opacity: 1; transform: none; }
+
+:focus-visible { outline: 2px solid #9a5a38; outline-offset: 2px; border-radius: 4px; }
+
+#scroll-progress { position: fixed; top: 0; left: 0; z-index: 80; height: 3px; width: 100%; background: #b9973f; transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
+#site-header { transition: transform 0.35s ease; will-change: transform; }
+#site-header.header-hidden { transform: translateY(-115%); }
+#back-to-top { position: fixed; right: 1rem; bottom: 1rem; z-index: 70; display: grid; height: 3rem; width: 3rem; place-items: center; border-radius: 9999px; background: #9a5a38; color: #fff; font-weight: 800; box-shadow: 0 8px 24px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.2s ease; }
+#back-to-top.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover { background: #b9973f; }
+#toast { position: fixed; left: 50%; bottom: 1.5rem; z-index: 96; max-width: calc(100vw - 2rem); transform: translate(-50%, 16px); border-radius: 9999px; background: #9a5a38; color: #fff; padding: 0.75rem 1.25rem; font-size: 0.875rem; font-weight: 700; box-shadow: 0 12px 32px rgba(0,0,0,0.35); opacity: 0; pointer-events: none; transition: opacity 0.25s ease, transform 0.25s ease; text-align: center; }
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.faq-panel { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 0.35s ease; }
+.faq-panel > div { overflow: hidden; min-height: 0; }
+.js .faq-panel { grid-template-rows: 0fr; }
+.js .faq-panel[data-open="true"] { grid-template-rows: 1fr; }
+.faq-icon { transition: transform 0.3s ease; }
+[data-faq-btn][aria-expanded="true"] .faq-icon { transform: rotate(45deg); }
+
+.wedding-card img { transition: transform 0.4s ease; }
+.wedding-card:hover img, .wedding-card:focus-visible img { transform: scale(1.05); }
+.card-arrow { display: inline-block; transition: transform 0.3s ease; }
+.wedding-card:hover .card-arrow, .wedding-card:focus-visible .card-arrow { transform: translateX(6px); }
+
+.bg-cream img, .bg-cream-2 img { background-color: #efe3d3; }
+.bg-terra img { background-color: rgba(154, 90, 56, 0.35); }
+
+.testi-track { transition: transform 0.5s ease; }
+#testi-viewport { touch-action: pan-y; cursor: grab; }
+#testi-viewport.dragging { cursor: grabbing; }
+#testi-viewport.dragging .testi-track { transition: none; }
+
+.field-error { margin-top: 0.375rem; font-size: 0.875rem; font-weight: 600; min-height: 1.25rem; }
+input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="true"] { border-color: #dc2626 !important; }
+[data-magnetic] { will-change: transform; }
+
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+.spin-slow { animation: spin-slow 18s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .spin-slow { animation: none; }
+  #site-header, #back-to-top, #toast, .faq-panel, .faq-icon, .wedding-card img, .card-arrow { transition: none !important; }
+}

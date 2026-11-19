@@ -1,0 +1,39 @@
+---
+// Picture.astro — <picture> with AVIF → WebP → JPG, same widths in every
+// format (480 / 800 / 1200 / 1600, capped at native width), native lazy
+// loading except the hero (eager + fetchpriority high). Never hotlinked:
+// every image is generated and converted locally.
+interface Props {
+  name: string;
+  alt: string;
+  widths?: number[];
+  sizes?: string;
+  eager?: boolean;
+  class?: string;
+  imgClass?: string;
+  ratio?: string;
+}
+const { name, alt, widths = [480, 800, 1200, 1600], sizes, eager = false, class: cls = '', imgClass = '', ratio } = Astro.props;
+import { existsSync } from 'node:fs';
+const avail = widths.filter((w) => existsSync(`public/images/${name}-${w}.jpg`));
+const useWidths = avail.length ? avail : widths;
+const srcset = (ext: string) => useWidths.map((w) => `/images/${name}-${w}.${ext} ${w}w`).join(', ');
+const fallback = `/images/${name}-${useWidths[useWidths.length - 1]}.jpg`;
+const style = ratio ? `aspect-ratio: ${ratio};` : undefined;
+---
+<picture class={cls} style={style}>
+  <source type="image/avif" srcset={srcset('avif')} sizes={sizes} />
+  <source type="image/webp" srcset={srcset('webp')} sizes={sizes} />
+  <img
+    src={fallback}
+    srcset={srcset('jpg')}
+    sizes={sizes}
+    alt={alt}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding="async"
+    fetchpriority={eager ? 'high' : undefined}
+    class={imgClass}
+    width="1200"
+    height="800"
+  />
+</picture>

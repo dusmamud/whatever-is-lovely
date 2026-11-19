@@ -1,0 +1,63 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Picture from '../components/Picture.astro';
+import { services, contact } from '../data/site';
+---
+<Layout title="Work With Us — Whatever is Lovely | Kansas City Wedding Planning" description="Tell us your wedding date and your dream — we'll take it from there. Booking 2026 weddings now.">
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <div class="grid gap-10 md:grid-cols-2">
+      <div>
+        <p class="reveal text-xs font-bold uppercase tracking-[0.35em] text-gold">Work With Us</p>
+        <h1 data-split class="mt-2 font-display text-5xl font-semibold uppercase leading-tight text-terra sm:text-6xl">Let's create something incredible</h1>
+        <p class="reveal mt-4 leading-relaxed text-ink-soft">Tell us a little about your wedding and we'll reply within one business day with next steps and honest availability. No obligation, no pressure.</p>
+        <div class="reveal mt-6">
+          <Picture name="couple-portrait-2" alt="Happy bride and groom smiling together" sizes="(max-width: 768px) 100vw, 560px" imgClass="aspect-[4/3] w-full rounded-2xl object-cover shadow-md" />
+        </div>
+        <dl class="reveal mt-6 space-y-2 text-sm">
+          <div class="flex gap-3"><dt class="w-20 shrink-0 font-bold uppercase tracking-wider text-gold">Email</dt><dd><a href={`mailto:${contact.email}`} class="text-terra underline">{contact.email}</a></dd></div>
+          <div class="flex gap-3"><dt class="w-20 shrink-0 font-bold uppercase tracking-wider text-gold">Phone</dt><dd><a href={contact.phoneHref} class="text-terra underline">{contact.phoneDisplay}</a></dd></div>
+          <div class="flex gap-3"><dt class="w-20 shrink-0 font-bold uppercase tracking-wider text-gold">Studio</dt><dd>{contact.location} · {contact.hours}</dd></div>
+        </dl>
+      </div>
+      <div class="reveal rounded-2xl border border-line bg-white p-7 shadow-sm sm:p-9">
+        <h2 class="font-display text-3xl font-semibold text-terra">Tell us about your wedding</h2>
+        <p class="mt-1 text-sm text-ink-soft">Mock form — no charge. Submitting opens your mail app with the details filled in.</p>
+        <form id="work-form" novalidate class="mt-6 space-y-5">
+          <div>
+            <label for="wf-name" class="text-sm font-bold text-terra">Your names *</label>
+            <input id="wf-name" name="name" type="text" autocomplete="name" required placeholder="Emma & James" aria-describedby="wf-name-error" class="mt-1 w-full rounded-xl border border-line bg-cream px-4 py-3 outline-none placeholder:text-ink-soft/50 focus:border-terra" />
+            <p id="wf-name-error" class="field-error invisible text-red-700" role="alert"></p>
+          </div>
+          <div>
+            <label for="wf-email" class="text-sm font-bold text-terra">Email *</label>
+            <input id="wf-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" aria-describedby="wf-email-error" class="mt-1 w-full rounded-xl border border-line bg-cream px-4 py-3 outline-none placeholder:text-ink-soft/50 focus:border-terra" />
+            <p id="wf-email-error" class="field-error invisible text-red-700" role="alert"></p>
+          </div>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="wf-date" class="text-sm font-bold text-terra">Wedding date *</label>
+              <input id="wf-date" name="date" type="date" required aria-describedby="wf-date-error" class="mt-1 w-full rounded-xl border border-line bg-cream px-4 py-3 outline-none focus:border-terra" />
+              <p id="wf-date-error" class="field-error invisible text-red-700" role="alert"></p>
+            </div>
+            <div>
+              <label for="wf-service" class="text-sm font-bold text-terra">Service *</label>
+              <select id="wf-service" name="service" required aria-describedby="wf-service-error" class="mt-1 w-full rounded-xl border border-line bg-cream px-4 py-3 outline-none focus:border-terra">
+                <option value="">Choose a service…</option>
+                {services.map((s) => (<option value={s.title}>{s.title} — {s.price}</option>))}
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+              <p id="wf-service-error" class="field-error invisible text-red-700" role="alert"></p>
+            </div>
+          </div>
+          <div>
+            <label for="wf-message" class="text-sm font-bold text-terra">Tell us about your wedding *</label>
+            <textarea id="wf-message" name="message" rows="5" required placeholder="Venue, guest count, style — whatever you've dreamed up so far…" aria-describedby="wf-message-error" class="mt-1 w-full rounded-xl border border-line bg-cream px-4 py-3 outline-none placeholder:text-ink-soft/50 focus:border-terra"></textarea>
+            <p id="wf-message-error" class="field-error invisible text-red-700" role="alert"></p>
+          </div>
+          <button type="submit" data-magnetic class="w-full rounded-sm bg-gold px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:bg-gold-deep">Send Our Enquiry</button>
+          <p id="work-form-ok" class="hidden rounded-xl bg-cream-2 px-4 py-3 text-center text-sm font-semibold text-terra">Thanks — your mail app should open with the enquiry ready to send.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</Layout>

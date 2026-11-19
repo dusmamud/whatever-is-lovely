@@ -1,0 +1,117 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  ogImage?: string;
+  ogType?: string;
+  publishedTime?: string;
+  robots?: string;
+  lead?: string;
+}
+const {
+  title = 'Whatever is Lovely — Kansas City Wedding Planning + Coordination',
+  description = site.description,
+  jsonLd,
+  ogImage = `${site.url}/images/hero-couple-1200.jpg`,
+  ogType = 'website',
+  publishedTime,
+  robots,
+  lead,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const crumbs = Astro.url.pathname.split('/').filter(Boolean);
+const crumbLabels: Record<string, string> = {
+  'our-team': 'Our Team', services: 'Services', blog: 'The Blog', faq: 'FAQ',
+  privacy: 'Privacy Policy', terms: 'Terms of Service', 'work-with-us': 'Work With Us',
+  search: 'Search',
+  'full-service-planning': 'Full Service Planning', 'partial-planning': 'Partial Planning',
+  'day-of-coordination': 'Day-Of Coordination',
+  'kansas-city-wedding-venues': 'Kansas City Wedding Venues',
+  'day-of-coordination-worth-it': 'Is Day-Of Coordination Worth It?',
+  'wedding-budget-kansas-city': 'Kansas City Wedding Budget 2026',
+};
+const crumbLd = crumbs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: site.url + '/' },
+        ...crumbs.map((c, i) => ({
+          '@type': 'ListItem',
+          position: i + 2,
+          name: crumbLabels[c] ?? c.replace(/-/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()),
+          item: site.url + '/' + crumbs.slice(0, i + 1).join('/') + '/',
+        })),
+      ],
+    }
+  : null;
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Whatever is Lovely',
+  url: site.url,
+  inLanguage: 'en',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: { '@type': 'EntryPoint', urlTemplate: site.url + '/search/?q={search_term_string}' },
+    'query-input': 'required name=search_term_string',
+  },
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
+    <meta name="theme-color" content="#9a5a38" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content={ogType} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    <meta property="og:site_name" content="Whatever is Lovely" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="800" />
+    <meta property="og:image:alt" content="Whatever is Lovely — Kansas City wedding planning" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <link rel="preload" href="/fonts/cormorant-garamond-600.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/cormorant-garamond-700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />
+    {crumbLd && <script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />}
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <script>document.documentElement.classList.add('js');</script>
+  </head>
+  <body class="bg-cream font-sans text-ink antialiased">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-terra focus:px-5 focus:py-3 focus:text-white">Skip to content</a>
+    <Header />
+    <main id="main">
+      {lead && <p class="sr-only">{lead}</p>}
+      <slot />
+    </main>
+    <Footer />
+    <div id="scroll-progress" aria-hidden="true"></div>
+    <button id="back-to-top" type="button" aria-label="Back to top"><span aria-hidden="true">↑</span></button>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script>
+      import '../scripts/motion.ts';
+    </script>
+  </body>
+</html>
