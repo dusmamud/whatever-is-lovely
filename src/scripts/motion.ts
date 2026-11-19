@@ -108,6 +108,7 @@ const dots = [...document.querySelectorAll<HTMLElement>('[data-dot]')];
 let idx = 0;
 let timer: number | undefined;
 let paused = false;
+let inView = true;
 const go = (i: number) => {
   if (!track || !slides?.length) return;
   idx = (i + slides.length) % slides.length;
@@ -120,7 +121,7 @@ const go = (i: number) => {
 };
 const startAuto = () => {
   window.clearInterval(timer);
-  if (track && slides?.length && !paused && !reduced) timer = window.setInterval(() => go(idx + 1), 6000);
+  if (track && slides?.length && !paused && !reduced && inView) timer = window.setInterval(() => go(idx + 1), 6000);
 };
 const pauseAuto = () => { paused = true; window.clearInterval(timer); };
 const resumeAuto = () => { paused = false; startAuto(); };
@@ -145,6 +146,15 @@ if (viewport && track && slides?.length) {
   viewport.addEventListener('pointerup', endDrag);
   viewport.addEventListener('pointercancel', endDrag);
   document.addEventListener('visibilitychange', () => { if (document.hidden) window.clearInterval(timer); else startAuto(); });
+  // Pause auto-advance while the slider is off-screen, so it never sits
+  // mid-transition when the visitor scrolls back to it (or during a
+  // full-page screenshot pass). Resumes when it scrolls into view.
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      inView = entries[0]?.isIntersecting ?? true;
+      if (inView) startAuto(); else window.clearInterval(timer);
+    }, { threshold: 0.25 }).observe(viewport);
+  }
   startAuto();
 }
 
