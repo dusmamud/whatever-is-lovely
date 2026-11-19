@@ -3,24 +3,75 @@ import Layout from '../../layouts/Layout.astro';
 import Picture from '../../components/Picture.astro';
 import { blogPosts } from '../../data/site';
 const fmtDate = (iso: string) => new Date(`${iso}T12:00:00`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+// Categories derived from the posts, so a new category appears here automatically.
+const categories = ['All', ...Array.from(new Set(blogPosts.map((p) => p.category)))];
+const pic = (img: string) => img.replace('/images/', '').replace(/-\d+\.jpg$/, '');
 ---
 <Layout title="The Blog — Whatever is Lovely | Kansas City Wedding Planning">
   <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
     <p class="reveal text-center text-xs font-bold uppercase tracking-[0.35em] text-gold-text">The Blog</p>
     <h1 data-split class="mt-2 text-center font-display text-5xl font-semibold uppercase text-terra sm:text-6xl">Planning notes + real weddings</h1>
     <p class="reveal mx-auto mt-4 max-w-xl text-center leading-relaxed text-ink-soft">Honest advice from ten years of Kansas City weddings — venues, budgets, timelines and the things nobody tells you.</p>
-    <div class="mt-12 grid gap-6 md:grid-cols-3">
+
+    <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-2" role="group" aria-label="Filter posts by category">
+      <span class="w-full text-center text-xs font-bold uppercase tracking-wider text-gold-text sm:w-auto sm:text-left">Category</span>
+      {categories.map((c) => (
+        <button type="button" data-filter-group="category" data-filter={c} aria-pressed={c === 'All' ? 'true' : 'false'} class:list={['min-h-[44px] rounded-full border px-4 py-2.5 text-sm font-bold uppercase tracking-wider transition', c === 'All' ? 'border-terra bg-terra text-white' : 'border-line bg-white text-terra hover:border-terra']}>{c}</button>
+      ))}
+    </div>
+    <p id="blog-count" class="mt-4 text-center text-sm font-semibold text-ink-soft" aria-live="polite">{blogPosts.length} posts</p>
+
+    <div id="blog-grid" class="mt-8 grid gap-6 md:grid-cols-3">
       {blogPosts.map((p) => (
-        <article class="wedding-card reveal overflow-hidden rounded-2xl bg-white shadow-sm">
-          <a href={`/blog/${p.slug}/`}><Picture name={p.img.replace('/images/', '').replace(/-\d+\.jpg$/, '')} alt={p.title} sizes="(max-width: 768px) 100vw, 380px" imgClass="aspect-[16/10] w-full object-cover" /></a>
+        <article class="wedding-card reveal overflow-hidden rounded-2xl bg-white shadow-sm" data-category={p.category}>
+          <a href={`/blog/${p.slug}/`}><Picture name={pic(p.img)} alt={p.title} sizes="(max-width: 768px) 100vw, 380px" imgClass="aspect-[16/10] w-full object-cover" /></a>
           <div class="p-5">
             <p class="text-xs font-bold uppercase tracking-wider text-gold-text">{p.category} · {fmtDate(p.date)} · {p.readingTime}</p>
             <h2 class="mt-1 font-display text-xl font-semibold leading-snug text-terra"><a href={`/blog/${p.slug}/`} class="transition hover:text-gold-deep">{p.title}</a></h2>
             <p class="mt-2 text-sm leading-relaxed text-ink-soft">{p.excerpt}</p>
+            <p class="mt-3 flex flex-wrap gap-1.5">
+              {p.tags.map((t) => (
+                <span class="rounded-full bg-mist px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-ink-soft">#{t}</span>
+              ))}
+            </p>
             <p class="mt-3 text-xs font-semibold text-ink-soft/70">By {p.author}, {p.authorRole}</p>
           </div>
         </article>
       ))}
     </div>
+    <p id="blog-empty" class="mt-8 hidden text-center text-ink-soft">No posts in this category yet — try another one.</p>
   </section>
 </Layout>
+<script>
+  // Category filter — same accessible pattern as the gallery filters:
+  // buttons toggle aria-pressed + active styles, cards hide with .hidden.
+  let active = 'All';
+  const items = [...document.querySelectorAll<HTMLElement>('#blog-grid article')];
+  const count = document.getElementById('blog-count');
+  const empty = document.getElementById('blog-empty');
+  const apply = () => {
+    let shown = 0;
+    items.forEach((it) => {
+      const ok = active === 'All' || it.dataset.category === active;
+      it.classList.toggle('hidden', !ok);
+      if (ok) shown += 1;
+    });
+    if (count) count.textContent = shown === 1 ? '1 post' : `${shown} posts`;
+    empty?.classList.toggle('hidden', shown > 0);
+  };
+  document.querySelectorAll<HTMLButtonElement>('[data-filter-group="category"]').forEach((b) => {
+    b.addEventListener('click', () => {
+      active = b.dataset.filter ?? 'All';
+      document.querySelectorAll<HTMLButtonElement>('[data-filter-group="category"]').forEach((sib) => {
+        const on = sib === b;
+        sib.setAttribute('aria-pressed', String(on));
+        sib.classList.toggle('border-terra', on);
+        sib.classList.toggle('bg-terra', on);
+        sib.classList.toggle('text-white', on);
+        sib.classList.toggle('bg-white', !on);
+        sib.classList.toggle('text-terra', !on);
+      });
+      apply();
+    });
+  });
+</script>

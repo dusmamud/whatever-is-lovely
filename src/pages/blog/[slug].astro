@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Picture from '../../components/Picture.astro';
-import { blogPosts } from '../../data/site';
+import { blogPosts, team } from '../../data/site';
 
 export function getStaticPaths() {
   return blogPosts.map((p) => ({ params: { slug: p.slug } }));
@@ -9,6 +9,9 @@ export function getStaticPaths() {
 const { slug } = Astro.params;
 const post = blogPosts.find((p) => p.slug === slug)!;
 const others = blogPosts.filter((p) => p.slug !== slug);
+// Author bio + portrait come from the team roster, matched by name.
+const author = team.find((m) => m.name === post.author);
+const pic = (img: string) => img.replace('/images/', '').replace(/-\d+\.jpg$/, '');
 // en-GB day month year, e.g. '8 Nov 2026' — never a raw ISO date on the page.
 const fmtDate = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(post.date + 'T12:00:00'));
 const jsonLd = {
@@ -19,6 +22,7 @@ const jsonLd = {
   author: { '@type': 'Person', name: post.author, jobTitle: post.authorRole },
   datePublished: post.date,
   dateModified: post.date,
+  keywords: post.tags.join(', '),
   image: `https://whatever-is-lovely.pages.dev${post.img}`,
   mainEntityOfPage: { '@type': 'WebPage', '@id': `https://whatever-is-lovely.pages.dev/blog/${post.slug}/` },
   publisher: { '@type': 'Organization', name: 'Whatever is Lovely', url: 'https://whatever-is-lovely.pages.dev' },
@@ -32,9 +36,26 @@ const jsonLd = {
     <div class="reveal mt-8">
       <Picture name={post.img.replace('/images/', '').replace(/-\d+\.jpg$/, '')} alt={post.title} sizes="(max-width: 768px) 100vw, 768px" imgClass="aspect-[16/10] w-full rounded-2xl object-cover shadow-md" />
     </div>
+    <p class="reveal mt-6 flex flex-wrap justify-center gap-1.5">
+      {post.tags.map((t) => (
+        <span class="rounded-full bg-mist px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-ink-soft">#{t}</span>
+      ))}
+    </p>
     <div class="reveal mt-8 space-y-5 text-lg leading-relaxed text-ink-soft">
       {post.body.map((para) => (<p>{para}</p>))}
     </div>
+    {author && (
+      <aside class="reveal mt-10 flex flex-col items-center gap-5 rounded-2xl border border-line bg-white p-6 text-center shadow-sm sm:flex-row sm:text-left">
+        <Picture name={pic(author.img)} alt={`Portrait of ${author.name}`} sizes="160px" imgClass="h-28 w-28 shrink-0 rounded-full object-cover" />
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.25em] text-gold-text">Written by</p>
+          <h2 class="mt-1 font-display text-2xl font-semibold text-terra">{author.name}</h2>
+          <p class="text-sm font-semibold text-ink-soft">{author.role}</p>
+          <p class="mt-2 text-sm leading-relaxed text-ink-soft">{author.bio}</p>
+          <a href="/our-team/" class="mt-3 inline-block text-sm font-bold uppercase tracking-wider text-terra underline decoration-gold decoration-2 underline-offset-4 transition hover:text-gold-deep">Meet the team →</a>
+        </div>
+      </aside>
+    )}
     <div class="reveal mt-10 rounded-2xl bg-terra p-7 text-center text-white">
       <p class="font-script text-4xl">let's plan yours</p>
       <p class="mt-2">Want help with your own Kansas City wedding?</p>
@@ -43,9 +64,12 @@ const jsonLd = {
     <h2 class="reveal mt-12 font-display text-3xl font-semibold text-terra">More from the blog</h2>
     <div class="mt-5 grid gap-4 sm:grid-cols-2">
       {others.map((o) => (
-        <a href={`/blog/${o.slug}/`} class="reveal block rounded-2xl border border-line bg-white p-5 shadow-sm transition hover:border-gold">
-          <p class="text-xs font-bold uppercase tracking-wider text-gold-text">{o.category} · {o.readingTime}</p>
-          <h3 class="mt-1 font-display text-xl font-semibold text-terra">{o.title}</h3>
+        <a href={`/blog/${o.slug}/`} class="reveal block overflow-hidden rounded-2xl border border-line bg-white shadow-sm transition hover:border-gold">
+          <Picture name={pic(o.img)} alt={o.title} sizes="(max-width: 768px) 100vw, 380px" imgClass="aspect-[16/10] w-full object-cover" />
+          <span class="block p-5">
+            <span class="block text-xs font-bold uppercase tracking-wider text-gold-text">{o.category} · {o.readingTime}</span>
+            <span class="mt-1 block font-display text-xl font-semibold text-terra">{o.title}</span>
+          </span>
         </a>
       ))}
     </div>
