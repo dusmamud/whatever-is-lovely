@@ -14,6 +14,8 @@ interface Props {
   publishedTime?: string;
   robots?: string;
   lead?: string;
+  /** Page includes the mobile StickyBar — reserve space after the footer so the fixed bar never covers footer content. */
+  stickyBar?: boolean;
 }
 const {
   title = 'Whatever is Lovely — Kansas City Wedding Planning + Coordination',
@@ -24,6 +26,7 @@ const {
   publishedTime,
   robots,
   lead,
+  stickyBar = false,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const crumbs = Astro.url.pathname.split('/').filter(Boolean);
@@ -37,6 +40,8 @@ const crumbLabels: Record<string, string> = {
   'full-service-planning': 'Full Service Planning', 'partial-planning': 'Partial Planning',
   'day-of-coordination': 'Day-Of Coordination',
   'kansas-city-wedding-venues': 'Kansas City Wedding Venues',
+  'wedding-day-timeline-that-works': 'Wedding-Day Timeline That Works',
+  'what-to-ask-your-wedding-photographer': 'What to Ask Your Wedding Photographer',
   'day-of-coordination-worth-it': 'Is Day-Of Coordination Worth It?',
   'wedding-budget-kansas-city': 'Kansas City Wedding Budget 2026',
   'emma-james-garden': 'Emma & James', 'sophia-liam-river': 'Sophia & Liam',
@@ -115,6 +120,7 @@ const websiteLd = {
       <slot />
     </main>
     <Footer />
+    {stickyBar && <div class="h-[88px] md:hidden" style="padding-bottom: env(safe-area-inset-bottom);" aria-hidden="true"></div>}
     <div id="scroll-progress" aria-hidden="true"></div>
     <button id="back-to-top" type="button" aria-label="Back to top"><span aria-hidden="true">↑</span></button>
     <div id="toast" role="status" aria-live="polite"></div>

@@ -6,7 +6,7 @@ import { pricingPackages, site } from '../../data/site';
 const basePrice = (p: string) => Number(p.replace(/[^0-9]/g, ''));
 const addOnPrice = (p: string) => Number(p.replace(/[^0-9]/g, ''));
 ---
-<Layout
+<Layout stickyBar
   title="Pricing & Investment — Whatever is Lovely | Kansas City Wedding Planning"
   description="Wedding planning pricing in Kansas City — full service from $6,500, partial from $3,200, day-of coordination from $1,850. Compare packages and estimate your investment."
   ogImage="https://whatever-is-lovely.pages.dev/images/venue-garden-1200.jpg"
@@ -17,7 +17,8 @@ const addOnPrice = (p: string) => Number(p.replace(/[^0-9]/g, ''));
     <p class="reveal mx-auto mt-4 max-w-2xl text-center leading-relaxed text-ink-soft">Three packages, one promise: every quote is fixed in writing before we start — no hidden charges later. A 30% deposit reserves your date; the balance is due in two instalments (half at the halfway point, the rest two weeks before the wedding).</p>
 
     <!-- Comparison table -->
-    <div class="reveal mt-12 overflow-x-auto rounded-2xl border border-line bg-white shadow-sm">
+    <p class="reveal mb-2 mt-10 text-right text-xs font-bold uppercase tracking-wider text-gold-text md:hidden">Swipe to compare →</p>
+    <div class="reveal overflow-x-auto rounded-2xl border border-line bg-white shadow-sm">
       <table class="w-full min-w-[720px] border-collapse text-left">
         <caption class="sr-only">Compare our three wedding planning packages</caption>
         <thead>

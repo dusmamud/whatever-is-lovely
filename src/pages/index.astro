@@ -35,13 +35,13 @@ const jsonLd = {
   },
 };
 ---
-<Layout title="Whatever is Lovely — Kansas City Wedding Planning + Coordination" jsonLd={jsonLd}>
+<Layout stickyBar title="Whatever is Lovely — Kansas City Wedding Planning + Coordination" jsonLd={jsonLd}>
   <!-- Hero -->
   <section class="relative" aria-label="Wedding photo" data-hero>
     <Picture name="hero-couple" alt="Groom in a taupe suit kissing his bride's forehead at golden hour under string lights" eager sizes="100vw" imgClass="h-[62vh] w-full object-cover sm:h-[78vh]" />
     <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/25 to-transparent" aria-hidden="true"></div>
     <div class="absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-4 pb-14 sm:px-6">
-      <p data-hero-item class="text-xs font-bold uppercase tracking-[0.35em] text-white">Kansas City Wedding Planner · Est. 2016</p>
+      <p data-hero-item class="text-xs font-bold uppercase tracking-[0.35em] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">Kansas City Wedding Planner · Est. 2016</p>
       <p data-hero-item class="mt-2 max-w-xl font-display text-4xl font-semibold leading-tight text-white sm:text-5xl">Your Kansas City wedding, planned beautifully</p>
       <p data-hero-item class="mt-2 max-w-lg leading-relaxed text-white/90">Personalized planning + coordination for couples livin' it up in KCMO — from the first hello to the last dance.</p>
       <a data-hero-item href="/book/" data-magnetic class="mt-5 inline-block rounded-sm bg-gold px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-ink hover:bg-white">Check Availability</a>
@@ -51,7 +51,7 @@ const jsonLd = {
 
   <!-- Intro — like the reference -->
   <section class="mx-auto max-w-6xl px-4 pb-10 pt-6 sm:px-6" aria-label="Introduction">
-    <div class="grid items-start gap-10 md:grid-cols-[220px_1fr_220px] lg:grid-cols-[260px_1fr_240px]">
+    <div class="grid items-start gap-10 md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[260px_minmax(0,1fr)_240px]">
       <div class="reveal mx-auto w-56 md:w-full">
         <Picture name="oval-cake-cutting" alt="Bride and groom cutting their tiered wedding cake" sizes="(max-width: 768px) 224px, 260px" imgClass="aspect-[3/4] w-full rounded-[50%] object-cover shadow-lg shadow-ink/10" />
       </div>
@@ -65,7 +65,7 @@ const jsonLd = {
         </div>
         <p class="sr-only">Established 2016, Kansas City, Missouri.</p>
       </div>
-      <div class="reveal mx-auto grid w-56 gap-3 md:w-full">
+      <div class="reveal mx-auto grid w-56 gap-3 md:col-span-2 md:w-full md:grid-cols-3 lg:col-span-1 lg:grid-cols-1">
         <Picture name="lights-reception" alt="Reception hall ceiling covered in warm string lights" sizes="(max-width: 768px) 224px, 240px" imgClass="aspect-[4/3] w-full rotate-1 border-4 border-white object-cover shadow-md" />
         <Picture name="couple-exit" alt="Newlyweds walking down the aisle as guests throw confetti" sizes="(max-width: 768px) 224px, 240px" imgClass="aspect-[4/3] w-full -rotate-1 border-4 border-white object-cover shadow-md" />
         <Picture name="cake-table" alt="Wedding cake table with flowers and gold candlesticks" sizes="(max-width: 768px) 224px, 240px" imgClass="aspect-[4/3] w-full rotate-1 border-4 border-white object-cover shadow-md" />

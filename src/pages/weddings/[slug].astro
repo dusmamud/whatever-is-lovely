@@ -47,7 +47,7 @@ const service = services.find((s) => s.title === wedding.serviceUsed);
 const quote = testimonials.find((t) => t.name === wedding.title);
 const others = weddings.filter((w) => w.slug !== wedding.slug).slice(0, 3);
 ---
-<Layout
+<Layout stickyBar
   title={`${wedding.title} — ${wedding.venue} | Whatever is Lovely`}
   description={`${wedding.title} at ${wedding.venue} (${wedding.season}) — a ${wedding.category.toLowerCase()} Kansas City wedding planned with ${wedding.serviceUsed}.`}
   ogImage={`${site.url}${wedding.img}`}

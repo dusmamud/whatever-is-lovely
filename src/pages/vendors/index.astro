@@ -6,7 +6,7 @@ import { vendors } from '../../data/site';
 const pic = (img: string) => img.replace('/images/', '').replace(/-\d+\.jpg$/, '');
 const categories = ['All', ...Array.from(new Set(vendors.map((v) => v.category)))];
 ---
-<Layout
+<Layout stickyBar
   title="Preferred Vendors & Venue Partners — Whatever is Lovely | Kansas City"
   description="Our preferred Kansas City wedding vendors — venues, florists, photographers, caterers, bakeries and musicians we've actually worked with."
   ogImage="https://whatever-is-lovely.pages.dev/images/venue-barn-1200.jpg"

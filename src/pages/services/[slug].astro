@@ -19,7 +19,7 @@ const heroImgs: Record<string, { name: string; alt: string }> = {
 };
 const hero = heroImgs[service.slug] ?? { name: 'garden-couple', alt: service.title };
 ---
-<Layout
+<Layout stickyBar
   title={`${service.title} — Whatever is Lovely | Kansas City Wedding Planning`}
   description={service.short}
   ogImage={`${site.url}/images/${hero.name}-1200.jpg`}

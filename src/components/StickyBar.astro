@@ -2,8 +2,8 @@
 import { contact } from '../data/site';
 ---
 <!-- Sticky mobile bottom bar: Book consultation + Call. Hidden on desktop.
-     The in-flow spacer keeps the fixed bar from covering footer content. -->
-<div class="h-[76px] md:hidden" aria-hidden="true"></div>
+     The spacer that keeps it from covering the footer lives in Layout.astro
+     (rendered after <Footer /> on pages with the stickyBar prop). -->
 <div class="fixed inset-x-0 bottom-0 z-[60] md:hidden" style="padding-bottom: env(safe-area-inset-bottom);">
   <div class="flex gap-2 border-t border-line bg-cream/95 px-3 pb-3 pt-2 shadow-[0_-4px_20px_rgba(0,0,0,0.12)] backdrop-blur">
     <a href="/book/" class="min-h-[48px] flex-1 content-center rounded-full bg-gold px-4 py-3 text-center text-sm font-bold uppercase tracking-wider text-ink transition hover:bg-terra hover:text-white">Book consultation</a>
